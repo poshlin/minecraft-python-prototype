@@ -268,42 +268,38 @@
     }
     .epic-lede strong { color: var(--text-dark); font-weight: 700; }
 
-    /* ══════════════════════════════════════ Hero / PROLOGUE ══════════════════════════════════════ */
+    /* ══════════════════════════════════════ Hero / PROLOGUE — 滿版背景 + 左側 panel ══════════════════════════════════════ */
     .hero {
-      background:
-        linear-gradient(180deg,
-          #93D7F5 0%,
-          #B5E2F5 28%,
-          rgba(232,243,225,0.7) 60%,
-          var(--grass-glow) 86%,
-          var(--bg-light) 100%);
-      padding: 96px 0 100px;
+      min-height: 80vh;
       position: relative;
       overflow: hidden;
+      display: flex;
+      align-items: center;
+      background: var(--bg-light);
     }
-    /* 天空中的立體方塊雲（多層、不同位置） */
-    .hero::before {
+    /* 滿版背景圖 */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-bg img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center 38%;
+      display: block;
+    }
+    /* 左側深色漸層，確保 panel 周邊有對比 */
+    .hero-bg::after {
       content: '';
       position: absolute;
-      top: 8%; left: 8%;
-      width: 80px; height: 36px;
+      inset: 0;
       background:
-        linear-gradient(180deg, #fff 0 70%, #E8EEF0 70%);
-      box-shadow:
-        110px 30px 0 -2px #fff,
-        110px 30px 0 -2px #E8EEF0 inset,
-        220px 10px 0 -4px #fff,
-        320px 50px 0 -2px #fff,
-        420px -10px 0 -6px #fff,
-        540px 25px 0 -3px #fff,
-        660px 5px 0 -4px #fff,
-        780px 35px 0 -2px #fff,
-        890px 15px 0 -5px #fff,
-        1010px 45px 0 -3px #fff,
-        1130px 8px 0 -4px #fff;
-      border-radius: 2px;
+        linear-gradient(90deg,
+          rgba(0,0,0,0.35) 0%,
+          rgba(0,0,0,0.12) 35%,
+          rgba(0,0,0,0) 60%);
       pointer-events: none;
-      z-index: 0;
     }
     /* 底部 grass-block 條紋 */
     .hero::after {
@@ -316,19 +312,50 @@
           var(--grass-green) 0 6px,
           var(--grass-deep) 6px 8px,
           var(--dirt-brown) 8px 14px);
-      z-index: 1;
+      z-index: 3;
     }
 
     .hero-main {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 48px;
-      align-items: center;
       position: relative;
       z-index: 2;
+      padding: 80px 0;
+    }
+
+    /* ── 左側白色 panel（Minecraft 風厚邊框） ── */
+    .hero-panel {
+      max-width: 560px;
+      background: var(--bg-white);
+      padding: 44px 40px 40px;
+      position: relative;
+      border: 5px solid var(--dirt-brown);
+      box-shadow:
+        inset 0 4px 0 0 rgba(255,255,255,0.7),
+        inset 0 -4px 0 0 rgba(0,0,0,0.06),
+        inset 4px 0 0 0 rgba(255,255,255,0.4),
+        inset -4px 0 0 0 rgba(0,0,0,0.04),
+        10px 10px 0 rgba(0,0,0,0.2),
+        0 0 0 3px var(--text-dark),
+        13px 13px 0 3px var(--text-dark);
+    }
+    /* 左上角小裝飾標籤（像 Minecraft 木牌） */
+    .hero-panel::before {
+      content: '';
+      position: absolute;
+      top: -14px; left: 28px;
+      width: 56px; height: 14px;
+      background: var(--grass-green);
+      border: 3px solid var(--text-dark);
     }
     @media (max-width: 991px) {
-      .hero-main { grid-template-columns: 1fr; gap: 40px; text-align: center; }
+      .hero { min-height: auto; padding: 60px 0; }
+      .hero-main { padding: 0; }
+      .hero-panel { max-width: 100%; padding: 36px 28px 32px; }
+      .hero-bg img { object-position: center 30%; }
+      .hero-bg::after {
+        background: linear-gradient(180deg,
+          rgba(0,0,0,0) 0%,
+          rgba(0,0,0,0.25) 100%);
+      }
     }
 
     .hero-eyebrow {
@@ -487,14 +514,17 @@
     }
     .hero-visual-placeholder .ico { font-size: 3rem; }
 
-    /* HUD 統計列 */
+    /* HUD 統計列 — 獨立 bar 在 hero 下方 */
+    .hero-hud-bar {
+      background: var(--bg-white);
+      padding: 36px 0;
+      border-bottom: 3px solid var(--line-soft);
+      position: relative;
+    }
     .hero-hud {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      margin-top: 60px;
-      padding-top: 36px;
-      border-top: 2px dashed var(--text-mute);
+      gap: 24px;
     }
     @media (max-width: 575px) {
       .hero-hud { grid-template-columns: 1fr 1fr; gap: 14px; }
@@ -1234,26 +1264,14 @@
        PROLOGUE / HERO
   ══════════════════════════════════════ -->
   <section class="hero" id="prologue">
-    <!-- 浮動 voxel 立方體裝飾 — 多色多尺寸佈滿四周 -->
-    <!-- 左側 -->
-    <span class="voxel-deco lg" style="top: 18%; left: 2%; animation-delay: 0s;" aria-hidden="true"></span>
-    <span class="voxel-deco sm c-gold" style="top: 32%; left: 9%; animation-delay: 1.5s;" aria-hidden="true"></span>
-    <span class="voxel-deco c-dirt" style="top: 48%; left: 3%; animation-delay: 3s;" aria-hidden="true"></span>
-    <span class="voxel-deco sm c-sky" style="top: 64%; left: 11%; animation-delay: 2.2s;" aria-hidden="true"></span>
-    <span class="voxel-deco" style="top: 80%; left: 5%; animation-delay: 4s;" aria-hidden="true"></span>
-    <!-- 右側 -->
-    <span class="voxel-deco c-gold sm" style="top: 12%; right: 14%; animation-delay: 0.8s;" aria-hidden="true"></span>
-    <span class="voxel-deco c-sky" style="top: 28%; right: 3%; animation-delay: 2.5s;" aria-hidden="true"></span>
-    <span class="voxel-deco c-dirt sm" style="top: 50%; right: 8%; animation-delay: 1.2s;" aria-hidden="true"></span>
-    <span class="voxel-deco lg c-gold" style="top: 70%; right: 2%; animation-delay: 3.5s;" aria-hidden="true"></span>
-    <span class="voxel-deco" style="top: 86%; right: 12%; animation-delay: 0.4s;" aria-hidden="true"></span>
-    <!-- 中央上方零星 -->
-    <span class="voxel-deco sm c-sky" style="top: 6%; left: 38%; animation-delay: 1.8s;" aria-hidden="true"></span>
-    <span class="voxel-deco sm c-gold" style="top: 4%; left: 58%; animation-delay: 2.8s;" aria-hidden="true"></span>
+    <!-- 滿版背景圖 -->
+    <div class="hero-bg" aria-hidden="true">
+      <img src="assets/hero-trio3.png" alt="">
+    </div>
 
     <div class="container-wide">
       <div class="hero-main">
-        <div class="hero-text">
+        <div class="hero-panel">
           <div class="hero-eyebrow">▸ MINECRAFT × PYTHON · 5-9 年級線上互動課</div>
 
           <h1 class="hero-title">
@@ -1276,13 +1294,13 @@
             <a href="#blueprint" class="btn-ghost">看完整 45 堂地圖 ↓</a>
           </div>
         </div>
-
-        <div class="hero-visual">
-          <img src="assets/hero-trio1.png" alt="麥塊 Python — 學生與角色一起在麥塊世界裡寫程式" loading="eager">
-        </div>
       </div>
+    </div>
+  </section>
 
-      <!-- HUD：核心三數字 -->
+  <!-- HUD bar：核心三數字 — 移出 hero 區，獨立 bar -->
+  <section class="hero-hud-bar" aria-label="課程核心數字">
+    <div class="container-wide">
       <div class="hero-hud">
         <div class="hero-hud-cell">
           <span class="hero-hud-num">45</span>
