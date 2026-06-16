@@ -268,38 +268,43 @@
     }
     .epic-lede strong { color: var(--text-dark); font-weight: 700; }
 
-    /* ══════════════════════════════════════ Hero / PROLOGUE — 滿版背景 + 左側 panel ══════════════════════════════════════ */
+    /* ══════════════════════════════════════ Hero / PROLOGUE — Side-by-side 高級版 ══════════════════════════════════════ */
     .hero {
-      min-height: 80vh;
+      min-height: 78vh;
       position: relative;
       overflow: hidden;
       display: flex;
       align-items: center;
-      background: var(--bg-light);
+      background:
+        linear-gradient(180deg,
+          #93D7F5 0%,
+          #B5E2F5 22%,
+          #E8F2DA 58%,
+          #C8E5B0 82%,
+          var(--grass-green) 100%);
+      padding: 64px 0 32px;
     }
-    /* 滿版背景圖 */
-    .hero-bg {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-    }
-    .hero-bg img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      object-position: center 38%;
-      display: block;
-    }
-    /* 左側深色漸層，確保 panel 周邊有對比 */
-    .hero-bg::after {
+    /* 天空中的方塊雲（box-shadow 多重位移） */
+    .hero::before {
       content: '';
       position: absolute;
-      inset: 0;
-      background:
-        linear-gradient(90deg,
-          rgba(0,0,0,0.35) 0%,
-          rgba(0,0,0,0.12) 35%,
-          rgba(0,0,0,0) 60%);
+      top: 10%; left: 6%;
+      width: 70px; height: 28px;
+      background: #fff;
+      box-shadow:
+        110px 30px 0 0 #fff,
+        220px 14px 0 -4px #fff,
+        340px 50px 0 -2px #fff,
+        460px -6px 0 -6px #fff,
+        580px 30px 0 -3px #fff,
+        700px 8px 0 -4px #fff,
+        820px 40px 0 -2px #fff,
+        940px 18px 0 -5px #fff,
+        1060px 48px 0 -3px #fff,
+        1180px 8px 0 -4px #fff,
+        1300px 32px 0 -3px #fff;
       pointer-events: none;
+      z-index: 0;
     }
     /* 底部 grass-block 條紋 */
     .hero::after {
@@ -309,53 +314,76 @@
       height: 14px;
       background:
         linear-gradient(180deg,
-          var(--grass-green) 0 6px,
-          var(--grass-deep) 6px 8px,
-          var(--dirt-brown) 8px 14px);
+          var(--grass-deep) 0 4px,
+          var(--dirt-brown) 4px 14px);
       z-index: 3;
     }
 
     .hero-main {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 56px;
+      align-items: center;
       position: relative;
       z-index: 2;
-      padding: 80px 0;
-    }
-
-    /* ── 左側白色 panel（Minecraft 風厚邊框） ── */
-    .hero-panel {
-      max-width: 560px;
-      background: var(--bg-white);
-      padding: 44px 40px 40px;
-      position: relative;
-      border: 5px solid var(--dirt-brown);
-      box-shadow:
-        inset 0 4px 0 0 rgba(255,255,255,0.7),
-        inset 0 -4px 0 0 rgba(0,0,0,0.06),
-        inset 4px 0 0 0 rgba(255,255,255,0.4),
-        inset -4px 0 0 0 rgba(0,0,0,0.04),
-        10px 10px 0 rgba(0,0,0,0.2),
-        0 0 0 3px var(--text-dark),
-        13px 13px 0 3px var(--text-dark);
-    }
-    /* 左上角小裝飾標籤（像 Minecraft 木牌） */
-    .hero-panel::before {
-      content: '';
-      position: absolute;
-      top: -14px; left: 28px;
-      width: 56px; height: 14px;
-      background: var(--grass-green);
-      border: 3px solid var(--text-dark);
     }
     @media (max-width: 991px) {
-      .hero { min-height: auto; padding: 60px 0; }
-      .hero-main { padding: 0; }
-      .hero-panel { max-width: 100%; padding: 36px 28px 32px; }
-      .hero-bg img { object-position: center 30%; }
-      .hero-bg::after {
-        background: linear-gradient(180deg,
-          rgba(0,0,0,0) 0%,
-          rgba(0,0,0,0.25) 100%);
-      }
+      .hero { min-height: auto; padding: 56px 0 40px; }
+      .hero-main { grid-template-columns: 1fr; gap: 36px; }
+    }
+
+    /* ── 左側 text panel（簡潔、字大） ── */
+    .hero-panel {
+      max-width: 540px;
+      padding: 0;
+    }
+    @media (max-width: 991px) {
+      .hero-panel { max-width: 100%; }
+    }
+
+    /* ── 右側 image — 木板相框（像 Minecraft 牆上的畫） ── */
+    .hero-visual {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16/9;
+      padding: 14px;
+      background:
+        repeating-linear-gradient(90deg,
+          #A68045 0 18px,
+          #8E6B36 18px 22px,
+          #B58A4F 22px 44px,
+          #8E6B36 44px 48px);
+      border: 4px solid var(--text-dark);
+      box-shadow:
+        inset 0 4px 0 0 rgba(255,255,255,0.18),
+        inset 0 -5px 0 0 rgba(0,0,0,0.25),
+        inset 4px 0 0 0 rgba(255,255,255,0.10),
+        inset -4px 0 0 0 rgba(0,0,0,0.20),
+        12px 14px 0 rgba(0,0,0,0.18);
+      transform: rotate(-0.8deg);
+      transition: transform 0.4s ease;
+    }
+    .hero-visual:hover { transform: rotate(0deg) translateY(-4px); }
+    /* 木板上方掛繩 */
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      top: -12px; left: 50%;
+      transform: translateX(-50%);
+      width: 32px; height: 14px;
+      background: var(--dirt-deep);
+      border: 3px solid var(--text-dark);
+      z-index: 4;
+    }
+    .hero-visual img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      object-position: center;
+      display: block;
+      border: 2px solid rgba(0,0,0,0.4);
+    }
+    @media (max-width: 991px) {
+      .hero-visual { transform: rotate(0); aspect-ratio: 16/9; }
     }
 
     .hero-eyebrow {
@@ -1264,11 +1292,6 @@
        PROLOGUE / HERO
   ══════════════════════════════════════ -->
   <section class="hero" id="prologue">
-    <!-- 滿版背景圖 -->
-    <div class="hero-bg" aria-hidden="true">
-      <img src="assets/hero-trio3.png" alt="">
-    </div>
-
     <div class="container-wide">
       <div class="hero-main">
         <div class="hero-panel">
@@ -1293,6 +1316,10 @@
             </button>
             <a href="#blueprint" class="btn-ghost">看完整 45 堂地圖 ↓</a>
           </div>
+        </div>
+
+        <div class="hero-visual">
+          <img src="assets/hero-trio3.png" alt="麥塊 Python — 學生與角色一起在麥塊世界裡寫程式" loading="eager">
         </div>
       </div>
     </div>
