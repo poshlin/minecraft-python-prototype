@@ -271,29 +271,61 @@
     /* ══════════════════════════════════════ Hero / PROLOGUE ══════════════════════════════════════ */
     .hero {
       background:
-        linear-gradient(180deg, rgba(79,183,232,0.22) 0%, rgba(255,255,255,0) 35%),
-        linear-gradient(0deg, var(--grass-glow) 0%, transparent 30%),
-        var(--bg-light);
-      padding: 96px 0 80px;
+        linear-gradient(180deg,
+          #93D7F5 0%,
+          #B5E2F5 28%,
+          rgba(232,243,225,0.7) 60%,
+          var(--grass-glow) 86%,
+          var(--bg-light) 100%);
+      padding: 96px 0 100px;
       position: relative;
       overflow: hidden;
     }
+    /* 天空中的立體方塊雲（多層、不同位置） */
     .hero::before {
       content: '';
       position: absolute;
-      left: 0; right: 0; bottom: 0;
-      height: 12px;
+      top: 8%; left: 8%;
+      width: 80px; height: 36px;
       background:
-        repeating-linear-gradient(90deg,
-          var(--grass-deep) 0 24px,
-          var(--grass-green) 24px 48px);
+        linear-gradient(180deg, #fff 0 70%, #E8EEF0 70%);
+      box-shadow:
+        110px 30px 0 -2px #fff,
+        110px 30px 0 -2px #E8EEF0 inset,
+        220px 10px 0 -4px #fff,
+        320px 50px 0 -2px #fff,
+        420px -10px 0 -6px #fff,
+        540px 25px 0 -3px #fff,
+        660px 5px 0 -4px #fff,
+        780px 35px 0 -2px #fff,
+        890px 15px 0 -5px #fff,
+        1010px 45px 0 -3px #fff,
+        1130px 8px 0 -4px #fff;
+      border-radius: 2px;
+      pointer-events: none;
+      z-index: 0;
+    }
+    /* 底部 grass-block 條紋 */
+    .hero::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 14px;
+      background:
+        linear-gradient(180deg,
+          var(--grass-green) 0 6px,
+          var(--grass-deep) 6px 8px,
+          var(--dirt-brown) 8px 14px);
+      z-index: 1;
     }
 
     .hero-main {
       display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 60px;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
       align-items: center;
+      position: relative;
+      z-index: 2;
     }
     @media (max-width: 991px) {
       .hero-main { grid-template-columns: 1fr; gap: 40px; text-align: center; }
@@ -412,21 +444,30 @@
     }
     .btn-ghost:hover { color: var(--orange-deep); border-bottom-color: var(--orange-deep); }
 
-    /* Hero 視覺欄位 */
+    /* Hero 視覺欄位 — 大尺寸、減少 border 突兀感 */
     .hero-visual {
       position: relative;
       aspect-ratio: 4/5;
-      max-width: 440px;
+      max-width: 560px;
+      width: 100%;
       margin: 0 auto;
       background: var(--bg-white);
-      border: 4px solid var(--text-dark);
-      box-shadow: 0 8px 0 var(--text-dark);
+      border: 3px solid var(--text-dark);
+      box-shadow:
+        0 10px 0 var(--text-dark),
+        12px 18px 0 rgba(0,0,0,0.12);
       overflow: hidden;
+      transform: rotate(-1.2deg);
+      transition: transform 0.4s ease;
     }
+    .hero-visual:hover { transform: rotate(0deg) scale(1.01); }
     .hero-visual img {
       width: 100%; height: 100%;
       object-fit: cover;
       display: block;
+    }
+    @media (max-width: 991px) {
+      .hero-visual { max-width: 440px; transform: rotate(0); }
     }
     .hero-visual-placeholder {
       width: 100%; height: 100%;
@@ -1190,12 +1231,22 @@
        PROLOGUE / HERO
   ══════════════════════════════════════ -->
   <section class="hero" id="prologue">
-    <!-- 浮動 voxel 立方體裝飾 -->
-    <span class="voxel-deco c-sky" style="top: 10%; left: 4%; animation-delay: 0s;" aria-hidden="true"></span>
-    <span class="voxel-deco sm c-gold" style="top: 22%; left: 12%; animation-delay: 1.5s;" aria-hidden="true"></span>
-    <span class="voxel-deco" style="top: 60%; left: 2%; animation-delay: 3s;" aria-hidden="true"></span>
-    <span class="voxel-deco c-dirt sm" style="top: 18%; right: 8%; animation-delay: 2s;" aria-hidden="true"></span>
-    <span class="voxel-deco c-sky lg" style="top: 70%; right: 4%; animation-delay: 1s;" aria-hidden="true"></span>
+    <!-- 浮動 voxel 立方體裝飾 — 多色多尺寸佈滿四周 -->
+    <!-- 左側 -->
+    <span class="voxel-deco lg" style="top: 18%; left: 2%; animation-delay: 0s;" aria-hidden="true"></span>
+    <span class="voxel-deco sm c-gold" style="top: 32%; left: 9%; animation-delay: 1.5s;" aria-hidden="true"></span>
+    <span class="voxel-deco c-dirt" style="top: 48%; left: 3%; animation-delay: 3s;" aria-hidden="true"></span>
+    <span class="voxel-deco sm c-sky" style="top: 64%; left: 11%; animation-delay: 2.2s;" aria-hidden="true"></span>
+    <span class="voxel-deco" style="top: 80%; left: 5%; animation-delay: 4s;" aria-hidden="true"></span>
+    <!-- 右側 -->
+    <span class="voxel-deco c-gold sm" style="top: 12%; right: 14%; animation-delay: 0.8s;" aria-hidden="true"></span>
+    <span class="voxel-deco c-sky" style="top: 28%; right: 3%; animation-delay: 2.5s;" aria-hidden="true"></span>
+    <span class="voxel-deco c-dirt sm" style="top: 50%; right: 8%; animation-delay: 1.2s;" aria-hidden="true"></span>
+    <span class="voxel-deco lg c-gold" style="top: 70%; right: 2%; animation-delay: 3.5s;" aria-hidden="true"></span>
+    <span class="voxel-deco" style="top: 86%; right: 12%; animation-delay: 0.4s;" aria-hidden="true"></span>
+    <!-- 中央上方零星 -->
+    <span class="voxel-deco sm c-sky" style="top: 6%; left: 38%; animation-delay: 1.8s;" aria-hidden="true"></span>
+    <span class="voxel-deco sm c-gold" style="top: 4%; left: 58%; animation-delay: 2.8s;" aria-hidden="true"></span>
 
     <div class="container-wide">
       <div class="hero-main">
