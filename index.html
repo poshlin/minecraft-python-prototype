@@ -323,10 +323,14 @@
       margin: 0 0 28px;
     }
     .hero-title .pop {
-      color: var(--orange);
-      background: var(--sun-yellow);
-      padding: 0 8px;
-      box-shadow: 0 4px 0 var(--orange-deep);
+      color: var(--orange-deep);
+      background: linear-gradient(180deg,
+        transparent 0 55%,
+        var(--sun-yellow) 55% 92%,
+        transparent 92%);
+      padding: 0 6px;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
     }
     .hero-title .strike {
       text-decoration: line-through;
@@ -1145,9 +1149,13 @@
     }
     .ending-headline .pop {
       color: var(--orange-deep);
-      background: var(--sun-yellow);
-      padding: 0 8px;
-      box-shadow: 0 4px 0 var(--orange-deep);
+      background: linear-gradient(180deg,
+        transparent 0 55%,
+        var(--sun-yellow) 55% 92%,
+        transparent 92%);
+      padding: 0 6px;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
     }
     .ending-sub {
       font-size: 1.12rem;
