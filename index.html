@@ -734,21 +734,24 @@
       position: relative;
     }
     .flex-card-ico {
-      width: 64px; height: 64px;
-      margin: 0 auto 16px;
-      background: var(--sky-blue);
-      color: var(--bg-white);
+      width: 132px; height: 132px;
+      margin: -8px auto 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 1.6rem;
-      border: 3px solid var(--text-dark);
-      box-shadow: 0 4px 0 var(--text-dark);
+      position: relative;
     }
-    .flex-card-ico.c2 { background: var(--orange); }
-    .flex-card-ico.c3 { background: var(--grass-green); }
-    .flex-card-ico.c4 { background: var(--sun-yellow); color: var(--text-dark); }
+    .flex-card-ico img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+      transition: transform 0.3s ease;
+    }
+    .flex-card:hover .flex-card-ico img { transform: translateY(-4px) scale(1.04); }
+    @media (max-width: 480px) {
+      .flex-card-ico { width: 110px; height: 110px; }
+    }
     .flex-card h4 {
       font-size: 1.08rem;
       font-weight: 900;
@@ -1510,24 +1513,32 @@ while True:<br>
 
       <div class="flex-grid" data-aos="fade-up">
         <div class="flex-card">
-          <div class="flex-card-ico">🖥</div>
+          <div class="flex-card-ico">
+            <img src="assets/flex-online.png" alt="100% 線上互動" loading="lazy">
+          </div>
           <h4>100% 線上互動</h4>
           <p>不用接送、不用出門。<strong>在家、在阿嬤家、在出差路上</strong>都能上。</p>
         </div>
         <div class="flex-card">
-          <div class="flex-card-ico c2">∞</div>
+          <div class="flex-card-ico">
+            <img src="assets/flex-infinity.png" alt="無調課次數限制" loading="lazy">
+          </div>
           <h4>無調課次數限制</h4>
           <p>每一堂課都能彈性調整時段，<strong>沒有次數上限</strong>。只要在該期上課期限內完成所有課程即可（例：1 期 15 堂 / 15 週內上完）。</p>
         </div>
         <div class="flex-card">
-          <div class="flex-card-ico c3">📅</div>
+          <div class="flex-card-ico">
+            <img src="assets/flex-schedule.png" alt="24 小時前彈性調課" loading="lazy">
+          </div>
           <h4>24 小時前彈性調課</h4>
           <p>前一天 24:00 前提出。可調入<strong>未來 3 - 60 天</strong>內的任何時段。</p>
         </div>
         <div class="flex-card">
-          <div class="flex-card-ico c4">👥</div>
+          <div class="flex-card-ico">
+            <img src="assets/flex-dual.png" alt="雙師制 — 影片講師加真人輔導" loading="lazy">
+          </div>
           <h4>雙師制</h4>
-          <p>一位主講老師 + 一位輔導老師。<strong>孩子卡住不會被丟下</strong>。</p>
+          <p>影片由<strong>資深講師預錄教學內容</strong>，搭配<strong>線上真人輔導老師</strong>互動帶領，孩子卡住會立刻被接住。</p>
         </div>
       </div>
 
