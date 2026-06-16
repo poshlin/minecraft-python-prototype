@@ -90,6 +90,100 @@
       .chapter { padding: 64px 0; }
     }
 
+    /* ── Voxel 裝飾：grass-block 分隔條（章節間） ── */
+    .grass-strip {
+      height: 22px;
+      background:
+        linear-gradient(180deg,
+          var(--grass-green) 0 8px,
+          var(--grass-deep) 8px 10px,
+          var(--dirt-brown) 10px 22px);
+      position: relative;
+      border-top: 2px solid var(--grass-deep);
+      border-bottom: 2px solid var(--dirt-deep);
+    }
+    .grass-strip::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 8px;
+      background-image:
+        radial-gradient(circle at 8% 50%, var(--grass-deep) 0 2px, transparent 2px),
+        radial-gradient(circle at 25% 30%, var(--grass-deep) 0 1.5px, transparent 1.5px),
+        radial-gradient(circle at 42% 60%, var(--grass-deep) 0 2px, transparent 2px),
+        radial-gradient(circle at 60% 40%, var(--grass-deep) 0 1.5px, transparent 1.5px),
+        radial-gradient(circle at 75% 55%, var(--grass-deep) 0 2px, transparent 2px),
+        radial-gradient(circle at 92% 35%, var(--grass-deep) 0 1.5px, transparent 1.5px);
+    }
+    .grass-strip::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 12px;
+      background-image:
+        linear-gradient(90deg,
+          transparent 0 10%,
+          var(--dirt-deep) 10% 12%,
+          transparent 12% 28%,
+          var(--dirt-deep) 28% 30%,
+          transparent 30% 50%,
+          var(--dirt-deep) 50% 52%,
+          transparent 52% 70%,
+          var(--dirt-deep) 70% 72%,
+          transparent 72% 88%,
+          var(--dirt-deep) 88% 90%,
+          transparent 90%);
+      opacity: 0.5;
+    }
+
+    /* ── Voxel 浮動立方體裝飾 ── */
+    .voxel-deco {
+      position: absolute;
+      width: 32px; height: 32px;
+      background: var(--grass-green);
+      box-shadow:
+        inset 0 -6px 0 var(--grass-deep),
+        inset 0 4px 0 rgba(255,255,255,0.3),
+        inset -4px 0 0 rgba(0,0,0,0.1),
+        4px 4px 0 rgba(0,0,0,0.08);
+      pointer-events: none;
+      z-index: 1;
+      animation: float-cube 6s ease-in-out infinite;
+    }
+    .voxel-deco.c-dirt {
+      background: var(--dirt-brown);
+      box-shadow:
+        inset 0 -6px 0 var(--dirt-deep),
+        inset 0 4px 0 rgba(255,255,255,0.2),
+        inset -4px 0 0 rgba(0,0,0,0.15),
+        4px 4px 0 rgba(0,0,0,0.08);
+    }
+    .voxel-deco.c-sky {
+      background: var(--sky-blue);
+      box-shadow:
+        inset 0 -6px 0 var(--sky-deep),
+        inset 0 4px 0 rgba(255,255,255,0.4),
+        inset -4px 0 0 rgba(0,0,0,0.08),
+        4px 4px 0 rgba(0,0,0,0.08);
+    }
+    .voxel-deco.c-gold {
+      background: var(--sun-yellow);
+      box-shadow:
+        inset 0 -6px 0 #C7A52F,
+        inset 0 4px 0 rgba(255,255,255,0.4),
+        inset -4px 0 0 rgba(0,0,0,0.08),
+        4px 4px 0 rgba(0,0,0,0.08);
+    }
+    .voxel-deco.sm { width: 20px; height: 20px; }
+    .voxel-deco.lg { width: 48px; height: 48px; }
+    @keyframes float-cube {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50%      { transform: translateY(-12px) rotate(3deg); }
+    }
+    @media (max-width: 768px) {
+      .voxel-deco { display: none; } /* 手機隱藏避免擠 */
+    }
+
     .chapter-header {
       display: flex;
       align-items: center;
@@ -107,22 +201,27 @@
       background: var(--orange);
     }
     .chapter-num {
-      font-family: 'Press Start 2P', monospace;
+      font-family: 'JetBrains Mono', monospace;
       font-size: 0.86rem;
-      color: var(--grass-green);
-      letter-spacing: 2px;
+      color: var(--grass-deep);
+      letter-spacing: 2.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      background: var(--grass-glow);
+      border: 2px solid var(--grass-green);
     }
     .chapter-name {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 0.86rem;
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 1.18rem;
       color: var(--text-dark);
-      letter-spacing: 2px;
+      letter-spacing: 1.5px;
+      font-weight: 900;
     }
     .chapter-tag {
       margin-left: auto;
-      font-size: 0.86rem;
+      font-size: 0.92rem;
       color: var(--text-mute);
-      letter-spacing: 1.5px;
+      font-weight: 500;
     }
     @media (max-width: 768px) {
       .chapter-header {
@@ -130,7 +229,8 @@
         gap: 10px;
         margin-bottom: 40px;
       }
-      .chapter-num, .chapter-name { font-size: 0.7rem; letter-spacing: 1.5px; }
+      .chapter-num { font-size: 0.72rem; letter-spacing: 1.5px; }
+      .chapter-name { font-size: 1rem; }
       .chapter-tag { width: 100%; margin-left: 0; }
     }
 
@@ -357,21 +457,28 @@
     }
     .hero-hud-cell { display: flex; flex-direction: column; gap: 4px; }
     .hero-hud-num {
-      font-family: 'Press Start 2P', monospace;
-      font-size: clamp(1.4rem, 3.4vw, 2rem);
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: clamp(2.2rem, 5.2vw, 3.4rem);
+      font-weight: 900;
       color: var(--grass-deep);
-      letter-spacing: 1px;
+      line-height: 1;
+      letter-spacing: -1px;
+      text-shadow:
+        2px 2px 0 var(--grass-green),
+        4px 4px 0 rgba(58, 138, 44, 0.35);
     }
     .hero-hud-label {
-      font-size: 0.86rem;
-      font-weight: 700;
+      font-size: 0.96rem;
+      font-weight: 800;
       color: var(--text-dark);
     }
     .hero-hud-sub {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 0.58rem;
-      letter-spacing: 1.5px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 2px;
       color: var(--text-mute);
+      text-transform: uppercase;
+      font-weight: 700;
     }
 
     /* ══════════════════════════════════════ 01 BIOME · 痛點 ══════════════════════════════════════ */
@@ -644,16 +751,21 @@
       box-shadow: 0 4px 0 var(--text-dark);
     }
     .academy-stat-num {
-      font-family: 'Press Start 2P', monospace;
-      font-size: 1.8rem;
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 900;
       color: var(--orange-deep);
-      letter-spacing: 1px;
-      margin-bottom: 4px;
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 8px;
+      text-shadow:
+        2px 2px 0 rgba(255,163,0,0.35);
     }
     .academy-stat-label {
       font-size: 0.96rem;
       color: var(--text-mute);
       font-weight: 700;
+      line-height: 1.4;
     }
     .academy-list {
       list-style: none;
@@ -1070,21 +1182,27 @@
        PROLOGUE / HERO
   ══════════════════════════════════════ -->
   <section class="hero" id="prologue">
+    <!-- 浮動 voxel 立方體裝飾 -->
+    <span class="voxel-deco c-sky" style="top: 10%; left: 4%; animation-delay: 0s;" aria-hidden="true"></span>
+    <span class="voxel-deco sm c-gold" style="top: 22%; left: 12%; animation-delay: 1.5s;" aria-hidden="true"></span>
+    <span class="voxel-deco" style="top: 60%; left: 2%; animation-delay: 3s;" aria-hidden="true"></span>
+    <span class="voxel-deco c-dirt sm" style="top: 18%; right: 8%; animation-delay: 2s;" aria-hidden="true"></span>
+    <span class="voxel-deco c-sky lg" style="top: 70%; right: 4%; animation-delay: 1s;" aria-hidden="true"></span>
+
     <div class="container-wide">
       <div class="hero-main">
         <div class="hero-text">
-          <div class="hero-eyebrow">▸ MINECRAFT × PYTHON · 線上互動課</div>
+          <div class="hero-eyebrow">▸ MINECRAFT × PYTHON · 5-9 年級線上互動課</div>
 
           <h1 class="hero-title">
-            他不想學<span class="strike">Scratch</span>，<br>
-            也害怕看 Python？<br>
-            在他最熟的世界，<span class="pop">繼續往前</span>。
+            玩麥塊的熱情，<br>
+            變成寫 <span class="pop">Python</span> 的能力。
           </h1>
 
           <p class="hero-sub">
-            橘蘋【麥塊 Python】是給 <strong>5-9 年級孩子</strong>的線上程式延續課。<br>
-            用 Python 對麥塊 Agent 下指令 — <strong>不換軌、不勉強升級、不被嚇跑</strong>。<br>
-            繼續玩、繼續學、繼續往前。
+            用 Python 對麥塊 Agent 下指令，<br>
+            在他最熟的世界，<strong>開始學寫真正的程式語言</strong>。<br>
+            線上互動 · 雙師支援 · 45 堂玩中學起點。
           </p>
 
           <div class="hero-actions">
@@ -1098,12 +1216,7 @@
         </div>
 
         <div class="hero-visual">
-          <!-- 之後嵌入 hero-trio.png（2 男 1 女麥塊風原創角色 + 電腦） -->
-          <div class="hero-visual-placeholder">
-            <span class="ico">⛏️</span>
-            <span>HERO IMAGE</span>
-            <span style="font-size:0.55rem;">[2 男 1 女麥塊風 + 電腦]</span>
-          </div>
+          <img src="assets/hero-trio.png" alt="麥塊 Python 三人組 — 用程式在麥塊世界裡冒險" loading="eager">
         </div>
       </div>
 
@@ -1136,33 +1249,33 @@
       <div class="chapter-header">
         <span class="chapter-num">01 / 09</span>
         <span class="chapter-name">BIOME</span>
-        <span class="chapter-tag">卡關生態 · 5-6 年級流失點</span>
+        <span class="chapter-tag">家長的處境</span>
       </div>
 
       <h2 class="epic-headline">
-        他玩完麥塊基礎，<br>
-        卻在<span class="accent">下一站卡住了</span>。
+        孩子玩麥塊這幾年，<br>
+        家長想知道 — <span class="accent">怎麼接續下去</span>？
       </h2>
       <p class="epic-lede">
-        小孩最常見的「程式學習中斷點」，<strong>從來不是學不來</strong>，<br>
-        而是「<strong>下一階段太難 / 沒興趣 / 看了就想逃</strong>」。
+        5-9 年級是孩子<strong>從「玩」走向「能力累積」</strong>的關鍵階段。<br>
+        每位家長的處境不同，但常見的三個願望都很真實。
       </p>
 
       <div class="biome-grid" data-aos="fade-up">
         <div class="biome-card">
-          <span class="biome-card-num">!</span>
-          <h3>麥塊上完 → 不想接 Scratch</h3>
-          <p>覺得 Scratch 是「<strong>給小小孩玩的</strong>」、太幼稚、跟麥塊比起來無聊。一旦排斥，整個學習斷掉。</p>
+          <span class="biome-card-num">A</span>
+          <h3>希望熱情能變成能力</h3>
+          <p>孩子玩麥塊已經<strong>幾百個小時</strong>。家長想知道：這份投入有沒有可能，變成<strong>真正的程式語言能力</strong>？</p>
         </div>
         <div class="biome-card">
-          <span class="biome-card-num">!</span>
-          <h3>Scratch 上完 → 對 Python 抗拒</h3>
-          <p>看到滿螢幕英文程式碼就想逃。「<strong>太像在打字、像在做功課</strong>」，覺得不有趣，不肯往下。</p>
+          <span class="biome-card-num">B</span>
+          <h3>需要彈性的學習節奏</h3>
+          <p>5-6 年級開始<strong>課業、才藝、學校活動全面增加</strong>。家長想要的是：能配合行程、不會因為缺課就跟不上的課。</p>
         </div>
         <div class="biome-card">
-          <span class="biome-card-num">!</span>
-          <h3>停下來 → 半年後完全放棄</h3>
-          <p>5-6 年級停掉程式學習的孩子，<strong>半年沒接觸就再也不想回來</strong>。一個興趣窗口就這樣關上。</p>
+          <span class="biome-card-num">C</span>
+          <h3>讓孩子在最熟的世界開始</h3>
+          <p>家長都希望孩子<strong>保有對程式的好奇</strong>。最自然的方式，是在他已經投入這麼多時間的麥塊世界裡，認識真正的程式語言。</p>
         </div>
       </div>
     </div>
@@ -1217,10 +1330,7 @@
         </div>
 
         <div class="portal-visual">
-          <!-- 之後嵌入 portal-bridge.png：橋接 Scratch→Python 視覺 -->
-          <div class="portal-visual-placeholder">
-            <div>PORTAL IMAGE<br>[Scratch→Python 橋接視覺]</div>
-          </div>
+          <img src="assets/portal-bridge.png" alt="從熟悉的麥塊世界，走向 Python 程式語言的橋梁" loading="lazy">
         </div>
       </div>
     </div>
@@ -1249,8 +1359,7 @@
       <div class="gameplay-deck">
         <div class="gameplay-card">
           <div class="gameplay-card-img">
-            <!-- 之後嵌入 gameplay-agent-mine.png -->
-            [GAMEPLAY-01 Agent 挖礦]
+            <img src="assets/gameplay-agent-mine.png" alt="Agent 自動挖礦：用 Python 寫迴圈讓 Agent 挖一條礦道">
           </div>
           <div class="gameplay-card-body">
             <span class="gameplay-card-tag">▸ AGENT · 自動挖礦</span>
@@ -1267,8 +1376,7 @@ for i in range(100):<br>
 
         <div class="gameplay-card">
           <div class="gameplay-card-img">
-            <!-- 之後嵌入 gameplay-agent-build.png -->
-            [GAMEPLAY-02 Agent 蓋城堡]
+            <img src="assets/gameplay-agent-build.png" alt="Agent 自動建造：用 Python 函式幾秒蓋好整面牆">
           </div>
           <div class="gameplay-card-body">
             <span class="gameplay-card-tag">▸ BUILD · 自動建造</span>
@@ -1285,7 +1393,7 @@ def build_wall(length):<br>
 
         <div class="gameplay-card">
           <div class="gameplay-card-img">
-            [GAMEPLAY-03 修復世界]
+            <img src="assets/gameplay-repair.png" alt="自動修復世界：用 Python 偵測損壞並補回方塊">
           </div>
           <div class="gameplay-card-body">
             <span class="gameplay-card-tag">▸ REPAIR · 修復世界</span>
@@ -1301,7 +1409,7 @@ if block_missing():<br>
 
         <div class="gameplay-card">
           <div class="gameplay-card-img">
-            [GAMEPLAY-04 自製寵物]
+            <img src="assets/gameplay-pet.png" alt="自製寵物：用 Python 寫一隻會跟著主人走的小狗">
           </div>
           <div class="gameplay-card-body">
             <span class="gameplay-card-tag">▸ PET · 自製寵物</span>
@@ -1317,6 +1425,9 @@ while True:<br>
       </div>
     </div>
   </section>
+
+  <!-- ── grass-block 分隔條 ── -->
+  <div class="grass-strip" aria-hidden="true"></div>
 
   <!-- ══════════════════════════════════════
        04 / FLEXIBILITY · 彈性學習 🆕 重大新章節
@@ -1381,27 +1492,28 @@ while True:<br>
       </div>
 
       <h2 class="epic-headline">
-        不靠單一名師，<br>
-        靠<span class="accent">教學部品質保證</span>。
+        14 年教學經驗，<br>
+        <span class="accent">橘蘋教學部品質保證</span>。
       </h2>
       <p class="epic-lede">
-        橘子蘋果的優勢不在「某位明星老師」，而在<strong>所有老師都通過同一套嚴格篩選與培訓</strong>。<br>
-        每位來上麥塊 Python 的孩子，遇到的都是「合格的橘蘋老師」。
+        橘子蘋果的教學品質來自<strong>整套系統</strong> —<br>
+        從師資篩選、教材培訓，到每堂課的雙師支援，<br>
+        確保每位孩子在線上也能獲得穩定、優質的學習體驗。
       </p>
 
       <div class="academy-wrap">
         <div class="academy-stats">
           <div class="academy-stat">
             <div class="academy-stat-num">100+</div>
-            <div class="academy-stat-label">線上 + 線下麥塊班同步運作中</div>
+            <div class="academy-stat-label">麥塊線上 / 線下班同步運作中</div>
           </div>
           <div class="academy-stat">
             <div class="academy-stat-num">14 年</div>
             <div class="academy-stat-label">橘蘋程式教育累積經驗</div>
           </div>
           <div class="academy-stat">
-            <div class="academy-stat-num">2 位</div>
-            <div class="academy-stat-label">每堂課的雙師標準配置</div>
+            <div class="academy-stat-num">雙師</div>
+            <div class="academy-stat-label">影片講師 + 真人線上輔導</div>
           </div>
         </div>
 
@@ -1409,25 +1521,25 @@ while True:<br>
           <li>
             <div>
               <h4>師資嚴格篩選</h4>
-              <p>橘蘋教學部主導，所有老師都需通過試教、教學評鑑、實際試帶。</p>
+              <p>橘蘋教學部主導，每位老師都通過試教、教學評鑑與實際試帶後才能正式上線。</p>
             </div>
           </li>
           <li>
             <div>
               <h4>標準化培訓系統</h4>
-              <p>每位老師都接受相同的麥塊 Python 教材培訓，確保每班的學習品質一致。</p>
+              <p>所有老師接受相同的麥塊 Python 教材培訓，確保每班節奏與品質一致。</p>
             </div>
           </li>
           <li>
             <div>
-              <h4>雙師制不放下任何孩子</h4>
-              <p>一位主講老師帶節奏、一位輔導老師關注每個孩子的狀態，跟不上的孩子立刻被接住。</p>
+              <h4>雙師支援 — 影片講師 + 線上真人老師</h4>
+              <p>影片中由<strong>資深講師預錄教學內容</strong>，確保講解清晰精準；同時搭配<strong>線上真人輔導老師</strong>互動帶領，孩子卡住時立刻被接住。</p>
             </div>
           </li>
           <li>
             <div>
               <h4>持續品質監控</h4>
-              <p>每期家長回饋、學員產出評估、教學部定期複訓 — 從入職到上課都在橘蘋的品質迴圈內。</p>
+              <p>每期家長回饋、學員產出評估、教學部定期複訓 — 從入職到上課，全程在品質迴圈內。</p>
             </div>
           </li>
         </ul>
@@ -1497,6 +1609,9 @@ while True:<br>
       </div>
     </div>
   </section>
+
+  <!-- ── grass-block 分隔條 ── -->
+  <div class="grass-strip" aria-hidden="true"></div>
 
   <!-- ══════════════════════════════════════
        07 / SPAWN · 兩條入會路徑
