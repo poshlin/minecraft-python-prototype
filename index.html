@@ -345,7 +345,7 @@
     .hero-visual {
       position: relative;
       width: 100%;
-      aspect-ratio: 16/9;
+      aspect-ratio: 1731 / 909;  /* 對齊 hero-trio3.png 原始比例，避免左右裁切 */
       padding: 14px;
       background:
         repeating-linear-gradient(90deg,
@@ -377,13 +377,13 @@
     }
     .hero-visual img {
       width: 100%; height: 100%;
-      object-fit: cover;
+      object-fit: cover;       /* 相框比例 = 圖比例，cover 不會裁切 */
       object-position: center;
       display: block;
       border: 2px solid rgba(0,0,0,0.4);
     }
     @media (max-width: 991px) {
-      .hero-visual { transform: rotate(0); aspect-ratio: 16/9; }
+      .hero-visual { transform: rotate(0); aspect-ratio: 1731 / 909; }
     }
 
     .hero-eyebrow {
