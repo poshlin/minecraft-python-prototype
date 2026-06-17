@@ -243,6 +243,9 @@
       color: var(--text-dark);
       margin: 0 0 20px;
     }
+    @media (max-width: 575px) {
+      .epic-headline { font-size: 1.7rem; letter-spacing: -0.5px; }
+    }
     .epic-headline .accent {
       color: var(--orange);
       position: relative;
@@ -345,6 +348,25 @@
         gap: 36px;
       }
     }
+    /* 手機專門修：Press Start 2P 像素字寬度壓縮 + 標題字級調整 */
+    @media (max-width: 575px) {
+      .hero-eyebrow {
+        font-size: 0.5rem;        /* 0.66 → 0.5 */
+        letter-spacing: 1px;       /* 2 → 1 */
+        padding: 7px 12px;
+      }
+      .hero-title { font-size: 1.85rem; letter-spacing: -0.5px; }
+      .btn-block {
+        padding: 14px 20px;
+        font-size: 0.96rem;
+        gap: 10px;
+      }
+      .btn-block .pixel-tag {
+        font-size: 0.5rem;
+        padding: 3px 6px;
+      }
+      .btn-block .arrow { font-size: 0.72rem; }
+    }
 
     /* ── 左側 text panel — 緊湊型，剛好落在白漸層內、不壓角色 ── */
     .hero-panel {
@@ -360,7 +382,6 @@
       display: none;  /* 桌機：藏 — 用 .hero 的滿版 background-image */
       position: relative;
       width: 100%;
-      aspect-ratio: 1870 / 841;  /* 對齊 hero-fullbleed.png 比例 */
       padding: 14px;
       background:
         repeating-linear-gradient(90deg,
@@ -377,14 +398,13 @@
         12px 14px 0 rgba(0,0,0,0.18);
     }
     .hero-visual img {
-      width: 100%; height: 100%;
-      object-fit: cover;
-      object-position: center;
+      width: 100%;
+      height: auto;  /* 讓圖自身比例決定高度，避免 aspect-ratio 計算 bug 產生白塊 */
       display: block;
       border: 2px solid rgba(0,0,0,0.4);
     }
     @media (max-width: 991px) {
-      .hero-visual { display: block; aspect-ratio: 1870 / 841; }
+      .hero-visual { display: block; }
     }
 
     .hero-eyebrow {
@@ -948,6 +968,10 @@
       font-size: 0.66rem;
       letter-spacing: 1.5px;
       margin-bottom: 14px;
+      white-space: nowrap;  /* 標籤完整不換行 */
+    }
+    @media (max-width: 575px) {
+      .blueprint-card-stage { font-size: 0.5rem; letter-spacing: 1px; padding: 6px 10px; }
     }
     .blueprint-card-stage.s2 { background: var(--sky-blue); }
     .blueprint-card-stage.s3 { background: var(--orange); color: var(--text-dark); }
@@ -992,7 +1016,11 @@
       font-family: 'Press Start 2P', monospace;
       font-size: 0.58rem;
       letter-spacing: 1.5px;
+      line-height: 1.7;
       color: var(--text-mute);
+    }
+    @media (max-width: 575px) {
+      .blueprint-card-foot { font-size: 0.46rem; letter-spacing: 0.8px; line-height: 1.6; }
     }
 
     /* ══════════════════════════════════════ 07 SPAWN · 報名方式 ══════════════════════════════════════ */
@@ -1457,7 +1485,7 @@
 
       <h2 class="epic-headline">
         寫一行 Python，<br>
-        Agent 就在世界裡<span class="accent">動起來</span>。
+        Agent 就在世界裡<span class="accent">動起來。</span>
       </h2>
       <p class="epic-lede">
         孩子實際在課堂上做的事 — <strong>用 Python 對麥塊 Agent 下指令</strong>，
