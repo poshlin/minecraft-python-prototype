@@ -1284,6 +1284,9 @@
       color: var(--orange-deep);
     }
 
+    /* slide 桌機隱形（不存在於 box tree，cards 直接被 grid 排版） */
+    .flex-slide, .ach-slide { display: contents; }
+
     /* ══════════════════════════════════════ 手機橫滑改造 — 03 / 04 / 08 ══════════════════════════════════════ */
     @media (max-width: 575px) {
       /* 03 GAMEPLAY — 1 張卡可見、左右滑 */
@@ -1301,34 +1304,33 @@
       .gameplay-deck::-webkit-scrollbar { display: none; }
       .gameplay-card { flex: 0 0 88%; scroll-snap-align: start; }
 
-      /* 04 FLEXIBILITY — 2 張卡可見、左右滑 */
+      /* 04 FLEXIBILITY — 1 頁 = 2 卡上下堆疊，左右滑下一頁 */
       .flex-grid {
         display: flex;
         flex-direction: row;
-        gap: 12px;
+        gap: 16px;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         padding: 6px 22px 18px;
         margin: 40px -22px 0;
         scrollbar-width: none;
         -webkit-overflow-scrolling: touch;
-        grid-template-columns: none;  /* 取消 grid 模式 */
+        grid-template-columns: none;
       }
       .flex-grid::-webkit-scrollbar { display: none; }
-      .flex-card {
-        flex: 0 0 46%;
+      .flex-slide {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        flex: 0 0 calc(100vw - 44px);  /* 滿版（扣掉左右 padding 22 each） */
         scroll-snap-align: start;
-        padding: 20px 14px;  /* 縮 padding 給內容空間 */
       }
-      .flex-card-ico { width: 90px; height: 90px; }  /* 圖標縮小匹配窄卡 */
-      .flex-card h4 { font-size: 1rem; }
-      .flex-card p { font-size: 0.82rem; line-height: 1.5; }
 
-      /* 08 ACHIEVEMENT — 3 張卡可見、左右滑 */
+      /* 08 ACHIEVEMENT — 1 頁 = 3 卡上下堆疊，左右滑下一頁 */
       .ach-grid {
         display: flex;
         flex-direction: row;
-        gap: 10px;
+        gap: 16px;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         padding: 6px 22px 18px;
@@ -1338,14 +1340,13 @@
         grid-template-columns: none;
       }
       .ach-grid::-webkit-scrollbar { display: none; }
-      .ach-card {
-        flex: 0 0 32%;
+      .ach-slide {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        flex: 0 0 calc(100vw - 44px);
         scroll-snap-align: start;
-        padding: 16px 12px;  /* 大幅縮 padding 給文字空間 */
       }
-      .ach-card-eyebrow { font-size: 0.55rem; letter-spacing: 0.5px; padding: 3px 6px; }
-      .ach-card h3 { font-size: 0.95rem; line-height: 1.3; margin-bottom: 6px; }
-      .ach-card p { font-size: 0.74rem; line-height: 1.5; }
     }
   </style>
 </head>
@@ -1620,6 +1621,7 @@ while True:<br>
       </p>
 
       <div class="flex-grid" data-aos="fade-up">
+        <div class="flex-slide">
         <div class="flex-card">
           <div class="flex-card-ico">
             <img src="assets/flex-online.png" alt="100% 線上互動" loading="lazy">
@@ -1634,6 +1636,8 @@ while True:<br>
           <h4>無調課次數限制</h4>
           <p>每一堂課都能彈性調整時段，<strong>沒有次數上限</strong>。只要在該期上課期限內完成所有課程即可（例：1 期 15 堂 / 15 週內上完）。</p>
         </div>
+        </div>
+        <div class="flex-slide">
         <div class="flex-card">
           <div class="flex-card-ico">
             <img src="assets/flex-schedule.png" alt="24 小時前彈性調課" loading="lazy">
@@ -1647,6 +1651,7 @@ while True:<br>
           </div>
           <h4>雙師制</h4>
           <p>影片由<strong>資深講師預錄教學內容</strong>，搭配<strong>線上真人輔導老師</strong>互動帶領，孩子卡住會立刻被接住。</p>
+        </div>
         </div>
       </div>
 
@@ -1851,6 +1856,7 @@ while True:<br>
       </p>
 
       <div class="ach-grid" data-aos="fade-up">
+        <div class="ach-slide">
         <div class="ach-card">
           <span class="ach-card-eyebrow">▸ ACHIEVEMENT 1</span>
           <h3>真實 Python 程式經驗</h3>
@@ -1868,7 +1874,9 @@ while True:<br>
           <h3>不被嚇跑的程式信心</h3>
           <p>5-9 年級這個關鍵期，孩子<strong>沒有放棄程式、沒有對英文程式碼產生恐懼</strong>。這比任何分數都重要。</p>
         </div>
+        </div>
 
+        <div class="ach-slide">
         <div class="ach-card">
           <span class="ach-card-eyebrow">▸ ACHIEVEMENT 4</span>
           <h3>解題思維的萌芽</h3>
@@ -1885,6 +1893,7 @@ while True:<br>
           <span class="ach-card-eyebrow">▸ ACHIEVEMENT 6</span>
           <h3>家長真的看得到進步</h3>
           <p>每期都有作品產出。<strong>不是只看老師回報</strong>，孩子真的在麥塊裡跑出自己寫的程式。家長看了會放心。</p>
+        </div>
         </div>
       </div>
     </div>
