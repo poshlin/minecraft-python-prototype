@@ -390,6 +390,7 @@
           #B58A4F 22px 44px,
           #8E6B36 44px 48px);
       border: 4px solid var(--text-dark);
+      box-sizing: border-box;
       box-shadow:
         inset 0 4px 0 0 rgba(255,255,255,0.18),
         inset 0 -5px 0 0 rgba(0,0,0,0.25),
@@ -399,12 +400,17 @@
     }
     .hero-visual img {
       width: 100%;
-      height: auto;  /* 讓圖自身比例決定高度，避免 aspect-ratio 計算 bug 產生白塊 */
+      height: 100%;
+      object-fit: cover;
+      object-position: 75% center;  /* 往右偏 25%，焦點 Steve+電腦 */
       display: block;
       border: 2px solid rgba(0,0,0,0.4);
     }
     @media (max-width: 991px) {
-      .hero-visual { display: block; }
+      .hero-visual {
+        display: block;
+        aspect-ratio: 4/3;  /* 4:3 比 21:9 更方，左側 Alex/狗/看書男孩會被裁掉 */
+      }
     }
 
     .hero-eyebrow {
@@ -1340,7 +1346,7 @@
           <div class="hero-actions">
             <button type="button" class="btn-block" data-oa-cta="hero">
               <span class="pixel-tag">START</span>
-              留下諮詢 · 免費試聽
+              預約免費試聽
               <span class="arrow">▸</span>
             </button>
             <a href="#blueprint" class="btn-ghost">看完整 45 堂地圖 ↓</a>
@@ -2025,7 +2031,7 @@ while True:<br>
 
       <button type="button" class="btn-block" data-oa-cta="ending">
         <span class="pixel-tag">START</span>
-        留下諮詢 · 免費體驗
+        預約免費體驗
         <span class="arrow">▸</span>
       </button>
 
