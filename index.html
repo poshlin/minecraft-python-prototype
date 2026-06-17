@@ -268,45 +268,37 @@
     }
     .epic-lede strong { color: var(--text-dark); font-weight: 700; }
 
-    /* ══════════════════════════════════════ Hero / PROLOGUE — Side-by-side 高級版 ══════════════════════════════════════ */
+    /* ══════════════════════════════════════ Hero / PROLOGUE — 全滿版 cinematic hero ══════════════════════════════════════ */
     .hero {
-      min-height: 78vh;
+      min-height: 88vh;
       position: relative;
       overflow: hidden;
       display: flex;
       align-items: center;
-      background:
-        linear-gradient(180deg,
-          #93D7F5 0%,
-          #B5E2F5 22%,
-          #E8F2DA 58%,
-          #C8E5B0 82%,
-          var(--grass-green) 100%);
-      padding: 64px 0 32px;
+      background-image: url('assets/hero-fullbleed.png');
+      background-size: cover;
+      background-position: right center;
+      background-repeat: no-repeat;
+      background-color: #B5E2F5;  /* 圖載入前的淡藍備用色 */
+      padding: 96px 0 56px;
     }
-    /* 天空中的方塊雲（box-shadow 多重位移） */
+    /* 左側淡色漸層 — 確保文字面板可讀 */
     .hero::before {
       content: '';
       position: absolute;
-      top: 10%; left: 6%;
-      width: 70px; height: 28px;
-      background: #fff;
-      box-shadow:
-        110px 30px 0 0 #fff,
-        220px 14px 0 -4px #fff,
-        340px 50px 0 -2px #fff,
-        460px -6px 0 -6px #fff,
-        580px 30px 0 -3px #fff,
-        700px 8px 0 -4px #fff,
-        820px 40px 0 -2px #fff,
-        940px 18px 0 -5px #fff,
-        1060px 48px 0 -3px #fff,
-        1180px 8px 0 -4px #fff,
-        1300px 32px 0 -3px #fff;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(250, 248, 241, 0.93) 0%,
+        rgba(250, 248, 241, 0.85) 18%,
+        rgba(250, 248, 241, 0.55) 36%,
+        rgba(250, 248, 241, 0.18) 50%,
+        transparent 62%
+      );
       pointer-events: none;
-      z-index: 0;
+      z-index: 1;
     }
-    /* 底部 grass-block 條紋 */
+    /* 底部 grass-block 條紋（保留銜接 01 章） */
     .hero::after {
       content: '';
       position: absolute;
@@ -320,16 +312,29 @@
     }
 
     .hero-main {
-      display: grid;
-      grid-template-columns: 1fr 1.15fr;
-      gap: 56px;
-      align-items: center;
+      display: block;  /* 滿版背景 — panel 自然靠左 */
       position: relative;
       z-index: 2;
     }
     @media (max-width: 991px) {
-      .hero { min-height: auto; padding: 56px 0 40px; }
-      .hero-main { grid-template-columns: 1fr; gap: 36px; }
+      .hero {
+        background-image: none;  /* 手機回到藍天漸層 + wood-frame 圖 */
+        background:
+          linear-gradient(180deg,
+            #93D7F5 0%,
+            #B5E2F5 22%,
+            #E8F2DA 58%,
+            #C8E5B0 82%,
+            var(--grass-green) 100%);
+        min-height: auto;
+        padding: 56px 0 40px;
+      }
+      .hero::before { display: none; }
+      .hero-main {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
     }
 
     /* ── 左側 text panel（簡潔、字大） ── */
@@ -341,11 +346,12 @@
       .hero-panel { max-width: 100%; }
     }
 
-    /* ── 右側 image — 木板相框（像 Minecraft 牆上的畫） ── */
+    /* ── 圖（手機 only：wood-frame thumbnail；桌機隱藏，用滿版背景） ── */
     .hero-visual {
+      display: none;  /* 桌機：藏 — 用 .hero 的滿版 background-image */
       position: relative;
       width: 100%;
-      aspect-ratio: 1731 / 909;  /* 對齊 hero-trio3.png 原始比例，避免左右裁切 */
+      aspect-ratio: 1870 / 841;  /* 對齊 hero-fullbleed.png 比例 */
       padding: 14px;
       background:
         repeating-linear-gradient(90deg,
@@ -360,30 +366,16 @@
         inset 4px 0 0 0 rgba(255,255,255,0.10),
         inset -4px 0 0 0 rgba(0,0,0,0.20),
         12px 14px 0 rgba(0,0,0,0.18);
-      transform: rotate(-0.8deg);
-      transition: transform 0.4s ease;
-    }
-    .hero-visual:hover { transform: rotate(0deg) translateY(-4px); }
-    /* 木板上方掛繩 */
-    .hero-visual::before {
-      content: '';
-      position: absolute;
-      top: -12px; left: 50%;
-      transform: translateX(-50%);
-      width: 32px; height: 14px;
-      background: var(--dirt-deep);
-      border: 3px solid var(--text-dark);
-      z-index: 4;
     }
     .hero-visual img {
       width: 100%; height: 100%;
-      object-fit: cover;       /* 相框比例 = 圖比例，cover 不會裁切 */
+      object-fit: cover;
       object-position: center;
       display: block;
       border: 2px solid rgba(0,0,0,0.4);
     }
     @media (max-width: 991px) {
-      .hero-visual { transform: rotate(0); aspect-ratio: 1731 / 909; }
+      .hero-visual { display: block; aspect-ratio: 1870 / 841; }
     }
 
     .hero-eyebrow {
@@ -1319,7 +1311,7 @@
         </div>
 
         <div class="hero-visual">
-          <img src="assets/hero-trio3.png" alt="麥塊 Python — 學生與角色一起在麥塊世界裡寫程式" loading="eager">
+          <img src="assets/hero-fullbleed.png" alt="麥塊 Python — 學生與角色一起在麥塊世界裡寫程式" loading="eager">
         </div>
       </div>
     </div>
