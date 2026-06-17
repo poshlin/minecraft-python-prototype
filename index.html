@@ -632,23 +632,26 @@
     }
     .portal-list li {
       display: grid;
-      grid-template-columns: 48px 1fr;
-      gap: 18px;
-      padding: 16px;
+      grid-template-columns: 72px 1fr;
+      gap: 20px;
+      padding: 18px;
       background: var(--bg-white);
       border-left: 6px solid var(--grass-green);
       box-shadow: 0 3px 0 var(--line-dim);
+      align-items: center;
     }
     .portal-list-ico {
-      width: 48px; height: 48px;
-      background: var(--grass-green);
-      color: var(--bg-white);
+      width: 72px; height: 72px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-family: 'Press Start 2P', monospace;
-      font-size: 1.4rem;
-      border: 3px solid var(--text-dark);
+      overflow: hidden;
+    }
+    .portal-list-ico img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
     }
     .portal-list h4 {
       font-size: 1.08rem;
@@ -1407,21 +1410,21 @@
 
           <ul class="portal-list">
             <li>
-              <span class="portal-list-ico">🌐</span>
+              <span class="portal-list-ico"><img src="assets/portal-ico-world.png" alt="麥塊世界" loading="lazy"></span>
               <div>
                 <h4>世界沒變，是 Minecraft</h4>
                 <p>他熟悉的方塊、生物、地形、機制 — 全部都還在。降低 70% 啟動門檻。</p>
               </div>
             </li>
             <li>
-              <span class="portal-list-ico">🤖</span>
+              <span class="portal-list-ico"><img src="assets/portal-ico-agent.png" alt="Agent 機器人" loading="lazy"></span>
               <div>
                 <h4>用「指揮 Agent」當切入</h4>
                 <p>不是無聊地寫程式，是讓 Agent 幫他蓋房子、挖礦、做事 — 動機自然而強。</p>
               </div>
             </li>
             <li>
-              <span class="portal-list-ico">🐍</span>
+              <span class="portal-list-ico"><img src="assets/portal-ico-python.png" alt="Python 語法" loading="lazy"></span>
               <div>
                 <h4>真實的 Python 語法</h4>
                 <p>不是圖形拖拉、不是兒童玩具語言。從第一堂課就在寫真正的 Python — 寫完直接看到 Agent 動。</p>
