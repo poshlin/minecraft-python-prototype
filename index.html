@@ -1304,49 +1304,41 @@
       .gameplay-deck::-webkit-scrollbar { display: none; }
       .gameplay-card { flex: 0 0 88%; scroll-snap-align: start; }
 
-      /* 04 FLEXIBILITY — 1 頁 = 2 卡上下堆疊，左右滑下一頁 */
+      /* 04 FLEX — CSS Grid 2 列 × N 欄（每欄 = 1 slide 滿版） */
       .flex-grid {
-        display: flex;
-        flex-direction: row;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: calc(100vw - 44px);
+        grid-template-rows: repeat(2, auto);
+        gap: 14px 16px;  /* row gap 14, col gap 16 */
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         padding: 6px 22px 18px;
         margin: 40px -22px 0;
         scrollbar-width: none;
         -webkit-overflow-scrolling: touch;
-        grid-template-columns: none;
       }
       .flex-grid::-webkit-scrollbar { display: none; }
-      .flex-slide {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        flex: 0 0 calc(100vw - 44px);  /* 滿版（扣掉左右 padding 22 each） */
-        scroll-snap-align: start;
-      }
+      .flex-card { scroll-snap-align: start; }
 
-      /* 08 ACHIEVEMENT — 1 頁 = 3 卡上下堆疊，左右滑下一頁 */
+      /* 08 ACH — CSS Grid 3 列 × N 欄 */
       .ach-grid {
-        display: flex;
-        flex-direction: row;
-        gap: 16px;
+        display: grid;
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: calc(100vw - 44px);
+        grid-template-rows: repeat(3, auto);
+        gap: 14px 16px;
         overflow-x: auto;
         scroll-snap-type: x mandatory;
         padding: 6px 22px 18px;
         margin: 40px -22px 0;
         scrollbar-width: none;
         -webkit-overflow-scrolling: touch;
-        grid-template-columns: none;
       }
       .ach-grid::-webkit-scrollbar { display: none; }
-      .ach-slide {
-        display: flex;
-        flex-direction: column;
-        gap: 14px;
-        flex: 0 0 calc(100vw - 44px);
-        scroll-snap-align: start;
-      }
+      .ach-card { scroll-snap-align: start; }
     }
   </style>
 </head>
