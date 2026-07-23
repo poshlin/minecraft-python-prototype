@@ -994,6 +994,17 @@
     @media (max-width: 575px) {
       .blueprint-card-foot { font-size: 0.64rem; letter-spacing: 0.8px; line-height: 1.6; }
     }
+    /* STAGE 3 未解鎖 / 籌備中：虛線框 + soft 底，不動不透明度以保 WCAG */
+    .blueprint-card.soon {
+      border-style: dashed;
+      background: var(--bg-soft);
+    }
+    .blueprint-card-soon {
+      font-size: 1rem;
+      color: var(--text-dark);
+      line-height: 1.75;
+      margin: 0 0 16px;
+    }
 
     /* ══════════════════════════════════════ 07 SPAWN · 報名方式 ══════════════════════════════════════ */
     .spawn-pair {
@@ -1518,74 +1529,75 @@
       </h2>
       <p class="epic-lede">
         孩子實際在課堂上做的事 — <strong>用 Python 對麥塊 Agent 下指令</strong>，
-        建立、修復、自動化整個 Minecraft 世界。
+        召喚、挖礦、建造、自動化整個 Minecraft 世界。
       </p>
 
-      <!-- TODO 待教學部確認：以下四個 Agent 範例（自動挖礦／自動建造／修復世界／自製寵物）為暫定版，
-           需替換成課程實際會教的真實範例（含 code-snippet 程式碼）。真素材到位前勿當定案討論。 -->
       <div class="gameplay-deck">
         <div class="gameplay-card">
           <div class="gameplay-card-img">
-            <img src="assets/gameplay-agent-mine.png" alt="Agent 自動挖礦：用 Python 寫迴圈讓 Agent 挖一條礦道">
+            <img src="assets/gameplay-chicken.jpg" alt="天上掉雞：一行迴圈連續召喚 100 隻雞從空中灑落">
+          </div>
+          <div class="gameplay-card-body">
+            <span class="gameplay-card-tag">▸ SPAWN · 天上掉雞</span>
+            <h3>打一個字，天上掉下 100 隻雞</h3>
+            <p>一個迴圈連續召喚生物，天空就隨機灑落一大群小雞。孩子第一次親眼看到「寫程式」的威力。</p>
+            <div class="code-snippet">
+<span class="com"># 天上隨機生成 100 隻雞</span><br>
+for i in range(100):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mobs.spawn(CHICKEN, random_pos)
+            </div>
+          </div>
+        </div>
+
+        <div class="gameplay-card">
+          <div class="gameplay-card-img">
+            <img src="assets/gameplay-mine.jpg" alt="Agent 自動挖礦：迴圈讓 Agent 邊挖邊前進，挖出可通行隧道">
           </div>
           <div class="gameplay-card-body">
             <span class="gameplay-card-tag">▸ AGENT · 自動挖礦</span>
-            <h3>讓 Agent 自己挖一條 100 格的礦道</h3>
-            <p>用迴圈和條件判斷，讓 Agent 邊挖邊撿、遇到熔岩自動轉向。一段 Python 程式碼搞定。</p>
+            <h3>讓 Agent 自己挖一條隧道</h3>
+            <p>寫一個迴圈，Agent 就邊挖邊前進，還會把上方也挖高，留出人能走的隧道。</p>
             <div class="code-snippet">
-<span class="com"># 讓 Agent 挖 100 格</span><br>
-for i in range(100):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;agent.destroy("forward")<br>
-&nbsp;&nbsp;&nbsp;&nbsp;agent.move("forward")
+<span class="com"># Agent 挖一條隧道</span><br>
+for i in range(10):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent.destroy(FORWARD)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent.move(FORWARD, 1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent.destroy(UP)
             </div>
           </div>
         </div>
 
         <div class="gameplay-card">
           <div class="gameplay-card-img">
-            <img src="assets/gameplay-agent-build.png" alt="Agent 自動建造：用 Python 函式幾秒蓋好整面牆">
+            <img src="assets/gameplay-castle.jpg" alt="蓋城堡：改一個變數 size，城堡就從小屋變成巨堡">
           </div>
           <div class="gameplay-card-body">
-            <span class="gameplay-card-tag">▸ BUILD · 自動建造</span>
-            <h3>用迴圈蓋出一座 10×10 城堡</h3>
-            <p>不再一塊一塊放方塊。用 Python 寫個函式，幾秒內就讓 Agent 把整座城堡蓋完。</p>
+            <span class="gameplay-card-tag">▸ BUILD · 蓋一座城堡</span>
+            <h3>改一個數字，城堡就變大</h3>
+            <p>用 blocks.fill 一次填出整塊、再挖空成牆。改變 size 這個變數，城堡立刻從小屋變巨堡。</p>
             <div class="code-snippet">
-<span class="com"># 一秒蓋一面牆</span><br>
-def build_wall(length):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;for _ in range(length):<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;agent.place_block()
+size = 6&nbsp;&nbsp;<span class="com"># 改這個數字城堡就變大</span><br>
+def build_castle():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;blocks.fill(STONE_BRICKS,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pos(3,0,0), pos(3+size,size,size))
             </div>
           </div>
         </div>
 
         <div class="gameplay-card">
           <div class="gameplay-card-img">
-            <img src="assets/gameplay-repair.png" alt="自動修復世界：用 Python 偵測損壞並補回方塊">
+            <img src="assets/gameplay-farm.jpg" alt="自動種田：Agent 一路耕地並撒下種子，種出整排農田">
           </div>
           <div class="gameplay-card-body">
-            <span class="gameplay-card-tag">▸ REPAIR · 修復世界</span>
-            <h3>偵測被炸毀的區塊、自動修復</h3>
-            <p>Creeper 把房子炸掉了？用 Python 寫一個「修復腳本」，Agent 自動補回所有被炸掉的方塊。</p>
+            <span class="gameplay-card-tag">▸ FARM · 自動耕種</span>
+            <h3>一整排農地，自動耕好種好</h3>
+            <p>Agent 一邊把泥土耕成農地、一邊往前走、一邊撒下種子，整排農田幾秒就種完。</p>
             <div class="code-snippet">
-<span class="com"># 偵測 + 修補</span><br>
-if block_missing():<br>
-&nbsp;&nbsp;&nbsp;&nbsp;agent.replace("stone")
-            </div>
-          </div>
-        </div>
-
-        <div class="gameplay-card">
-          <div class="gameplay-card-img">
-            <img src="assets/gameplay-pet.png" alt="自製寵物：用 Python 寫一隻會跟著主人走的小狗">
-          </div>
-          <div class="gameplay-card-body">
-            <span class="gameplay-card-tag">▸ PET · 自製寵物</span>
-            <h3>寫一隻會跟著你走的小狗</h3>
-            <p>用 Python 控制座標、追蹤距離。寫完，麥塊裡就多了一隻只屬於孩子自己的寵物。</p>
-            <div class="code-snippet">
-<span class="com"># 跟隨主人</span><br>
-while True:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;pet.follow(player)
+<span class="com"># 自動耕種一整排</span><br>
+for i in range(8):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent.till(FORWARD)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent.move(FORWARD, 1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent.place(DOWN)
             </div>
           </div>
         </div>
@@ -1749,41 +1761,36 @@ while True:<br>
       <div class="blueprint-grid">
         <div class="blueprint-card">
           <span class="blueprint-card-stage">▸ STAGE 1 · 第 1-15 堂</span>
-          <h3>Python 基礎指令</h3>
+          <h3>Python 基礎 × Agent 入門</h3>
           <p class="blueprint-card-sub">FIRST STEPS / 起步階段</p>
           <ul>
-            <li>認識 Python 語法</li>
-            <li>第一次對 Agent 下指令</li>
-            <li>變數、迴圈、條件判斷</li>
-            <li>讓 Agent 移動與放方塊</li>
+            <li>Python 語法、變數、座標</li>
+            <li>條件判斷、for / while 迴圈</li>
+            <li>指揮 Agent 移動、挖礦、建造</li>
+            <li>串列與函式入門</li>
           </ul>
-          <div class="blueprint-card-foot">▸ 第一期結束 · 能寫 30 行 Python 控制 Agent</div>
+          <div class="blueprint-card-foot">▸ 第一期結束 · 能用 Python 指揮 Agent 完成任務</div>
         </div>
 
         <div class="blueprint-card">
           <span class="blueprint-card-stage s2">▸ STAGE 2 · 第 16-30 堂</span>
-          <h3>函式與自動化</h3>
+          <h3>函式 × 自動化專案</h3>
           <p class="blueprint-card-sub">AUTOMATION / 自動化階段</p>
           <ul>
-            <li>寫自己的函式</li>
-            <li>用迴圈批次建造</li>
-            <li>偵測與條件反應</li>
-            <li>建立 / 修復世界專案</li>
+            <li>函式帶參數、回傳值、模組化</li>
+            <li>巢狀串列打造自動農場</li>
+            <li>紅石電路、廣場像素藝術</li>
+            <li>Debug 實戰：修好壞掉的程式碼</li>
           </ul>
-          <div class="blueprint-card-foot">▸ 第二期結束 · 能用 Python 自動建造完整建築</div>
+          <div class="blueprint-card-foot">▸ 第二期結束 · 能用 Python 打造一座自動化城市</div>
         </div>
 
-        <div class="blueprint-card">
+        <div class="blueprint-card soon">
           <span class="blueprint-card-stage s3">▸ STAGE 3 · 第 31-45 堂</span>
-          <h3>自由創作專案</h3>
-          <p class="blueprint-card-sub">CREATION / 創作階段</p>
-          <ul>
-            <li>整合所有 Python 工具</li>
-            <li>自製專屬寵物 / 小遊戲</li>
-            <li>用 Agent 完成個人作品</li>
-            <li>累積真實程式語言經驗</li>
-          </ul>
-          <div class="blueprint-card-foot">▸ 完課 · 帶走屬於孩子的麥塊 Python 作品集</div>
+          <h3>進階整合與自由創作</h3>
+          <p class="blueprint-card-sub">FINAL CHAPTER / 創作階段</p>
+          <p class="blueprint-card-soon">延續前兩階段，走向更完整的專案整合與個人創作。完整課綱正在籌備，隨課程開發同步公布。</p>
+          <div class="blueprint-card-foot">▸ COMING SOON · 敬請期待</div>
         </div>
       </div>
     </div>
