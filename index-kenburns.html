@@ -1,0 +1,2136 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>麥塊 Python ｜ 不勉強升級，在最熟的世界繼續往前 — 橘子蘋果程式學苑</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Pixelify+Sans:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    /* ══════════════════════════════════════
+       麥塊 Python ｜ 兒童樂園風 + 麥塊像素元素
+       — 明亮白底、草地綠主視覺、橘蘋橘 CTA
+       — 5-9 年級「不想升級」留存課
+    ══════════════════════════════════════ */
+
+    :root {
+      /* 麥塊風 palette */
+      --grass-green:  #4FAF3D;
+      --grass-deep:   #3A8A2C;
+      --grass-glow:   rgba(79, 175, 61, 0.35);
+      --sky-blue:     #4FB7E8;
+      --sky-deep:     #2E8FBE;
+      --dirt-brown:   #8B5A2B;
+      --dirt-deep:    #5C3A1B;
+      --sun-yellow:   #FFD93D;
+      --tnt-red:      #E55353;
+
+      /* 橘蘋品牌 */
+      --orange:       #FFA300;
+      --orange-deep:  #E08800;
+      --orange-glow:  rgba(255, 163, 0, 0.4);
+
+      /* 底色 / 字色 */
+      --bg-light:     #FAF8F1;
+      --bg-white:     #FFFFFF;
+      --bg-soft:      #F4F0E5;
+      --text-dark:    #2D2A24;
+      --text-mute:    rgba(45, 42, 36, 0.65);
+      --text-dim:     rgba(45, 42, 36, 0.45);
+      --grass-text:   #2C7A24;   /* 文字專用深綠：過 AA 4.5（grass-deep 當小字僅 4.33）*/
+      --tnt-text:     #C0392B;   /* 文字專用深紅：過 AA 4.5（tnt-red 當小字僅 3.69）*/
+
+      --line-soft:    rgba(0, 0, 0, 0.08);
+      --line-dim:     rgba(0, 0, 0, 0.14);
+      --line-bright:  rgba(79, 175, 61, 0.4);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { background: var(--bg-light); }
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 1rem;
+      color: var(--text-dark);
+      margin: 0;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    .mono { font-family: 'JetBrains Mono', monospace; }
+    .pixel { font-family: 'Pixelify Sans', monospace; letter-spacing: 0; }
+
+    /* ── 麥塊風方塊邊框（多階陰影模擬像素厚度） ── */
+    .block-border {
+      box-shadow:
+        inset 0 -4px 0 rgba(0,0,0,0.18),
+        inset 0 4px 0 rgba(255,255,255,0.4),
+        inset -4px 0 0 rgba(0,0,0,0.10),
+        inset 4px 0 0 rgba(255,255,255,0.18);
+    }
+
+    /* ══════════════════════════════════════ Layout ══════════════════════════════════════ */
+    .container-wide { max-width: 1280px; margin: 0 auto; padding: 0 48px; }
+    .container-narrow { max-width: 880px; margin: 0 auto; padding: 0 40px; }
+    @media (max-width: 768px) {
+      .container-wide, .container-narrow { padding: 0 22px; }
+    }
+
+    /* ══════════════════════════════════════ 章節通用 ══════════════════════════════════════ */
+    .chapter {
+      padding: 96px 0;
+      background: var(--bg-light);
+      position: relative;
+    }
+    .chapter.chapter-alt { background: var(--bg-soft); }
+    .chapter.chapter-white { background: var(--bg-white); }
+    @media (max-width: 768px) {
+      .chapter { padding: 64px 0; }
+    }
+
+    /* ── Voxel 裝飾：grass-block 分隔條（章節間） ── */
+    .grass-strip {
+      height: 22px;
+      background:
+        linear-gradient(180deg,
+          var(--grass-green) 0 8px,
+          var(--grass-deep) 8px 10px,
+          var(--dirt-brown) 10px 22px);
+      position: relative;
+      border-top: 2px solid var(--grass-deep);
+      border-bottom: 2px solid var(--dirt-deep);
+    }
+    .grass-strip::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 8px;
+      background-image:
+        radial-gradient(circle at 8% 50%, var(--grass-deep) 0 2px, transparent 2px),
+        radial-gradient(circle at 25% 30%, var(--grass-deep) 0 1.5px, transparent 1.5px),
+        radial-gradient(circle at 42% 60%, var(--grass-deep) 0 2px, transparent 2px),
+        radial-gradient(circle at 60% 40%, var(--grass-deep) 0 1.5px, transparent 1.5px),
+        radial-gradient(circle at 75% 55%, var(--grass-deep) 0 2px, transparent 2px),
+        radial-gradient(circle at 92% 35%, var(--grass-deep) 0 1.5px, transparent 1.5px);
+    }
+    .grass-strip::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 12px;
+      background-image:
+        linear-gradient(90deg,
+          transparent 0 10%,
+          var(--dirt-deep) 10% 12%,
+          transparent 12% 28%,
+          var(--dirt-deep) 28% 30%,
+          transparent 30% 50%,
+          var(--dirt-deep) 50% 52%,
+          transparent 52% 70%,
+          var(--dirt-deep) 70% 72%,
+          transparent 72% 88%,
+          var(--dirt-deep) 88% 90%,
+          transparent 90%);
+      opacity: 0.5;
+    }
+
+    /* ── Voxel 浮動立方體裝飾 ── */
+    .voxel-deco {
+      position: absolute;
+      width: 32px; height: 32px;
+      background: var(--grass-green);
+      box-shadow:
+        inset 0 -6px 0 var(--grass-deep),
+        inset 0 4px 0 rgba(255,255,255,0.3),
+        inset -4px 0 0 rgba(0,0,0,0.1),
+        4px 4px 0 rgba(0,0,0,0.08);
+      pointer-events: none;
+      z-index: 1;
+      animation: float-cube 6s ease-in-out infinite;
+    }
+    .voxel-deco.c-dirt {
+      background: var(--dirt-brown);
+      box-shadow:
+        inset 0 -6px 0 var(--dirt-deep),
+        inset 0 4px 0 rgba(255,255,255,0.2),
+        inset -4px 0 0 rgba(0,0,0,0.15),
+        4px 4px 0 rgba(0,0,0,0.08);
+    }
+    .voxel-deco.c-sky {
+      background: var(--sky-blue);
+      box-shadow:
+        inset 0 -6px 0 var(--sky-deep),
+        inset 0 4px 0 rgba(255,255,255,0.4),
+        inset -4px 0 0 rgba(0,0,0,0.08),
+        4px 4px 0 rgba(0,0,0,0.08);
+    }
+    .voxel-deco.c-gold {
+      background: var(--sun-yellow);
+      box-shadow:
+        inset 0 -6px 0 #C7A52F,
+        inset 0 4px 0 rgba(255,255,255,0.4),
+        inset -4px 0 0 rgba(0,0,0,0.08),
+        4px 4px 0 rgba(0,0,0,0.08);
+    }
+    .voxel-deco.sm { width: 20px; height: 20px; }
+    .voxel-deco.lg { width: 48px; height: 48px; }
+    @keyframes float-cube {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50%      { transform: translateY(-12px) rotate(3deg); }
+    }
+    @media (max-width: 768px) {
+      .voxel-deco { display: none; } /* 手機隱藏避免擠 */
+    }
+
+    .chapter-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 56px;
+      padding-bottom: 22px;
+      border-bottom: 3px solid var(--grass-green);
+      position: relative;
+    }
+    .chapter-header::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: -6px;
+      width: 80px; height: 3px;
+      background: var(--orange);
+    }
+    .chapter-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.86rem;
+      color: var(--text-dark);
+      letter-spacing: 2.5px;
+      font-weight: 700;
+      padding: 4px 10px;
+      background: var(--grass-glow);
+      border: 2px solid var(--grass-green);
+    }
+    .chapter-name {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 1.18rem;
+      color: var(--text-dark);
+      letter-spacing: 1.5px;
+      font-weight: 900;
+    }
+    .chapter-tag {
+      margin-left: auto;
+      font-size: 0.92rem;
+      color: var(--text-mute);
+      font-weight: 500;
+    }
+    @media (max-width: 768px) {
+      .chapter-header {
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 40px;
+      }
+      .chapter-num { font-size: 0.72rem; letter-spacing: 1.5px; }
+      .chapter-name { font-size: 1rem; }
+      .chapter-tag { width: 100%; margin-left: 0; }
+    }
+
+    /* 章節大標 */
+    .epic-headline {
+      font-size: clamp(2rem, 5vw, 3.6rem);
+      font-weight: 900;
+      line-height: 1.15;
+      letter-spacing: -1px;
+      color: var(--text-dark);
+      margin: 0 0 20px;
+    }
+    @media (max-width: 575px) {
+      .epic-headline { font-size: 1.7rem; letter-spacing: -0.5px; }
+    }
+    .epic-headline .accent {
+      color: var(--text-dark);
+      position: relative;
+      display: inline-block;
+    }
+    .epic-headline .accent::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: -6px;
+      height: 8px;
+      background: var(--sun-yellow);
+      z-index: -1;
+      opacity: 0.7;
+    }
+    .epic-headline .grass { color: var(--grass-deep); }
+
+    .epic-lede {
+      font-size: clamp(1.05rem, 1.6vw, 1.32rem);
+      line-height: 1.65;
+      color: var(--text-mute);
+      max-width: 720px;
+      font-weight: 400;
+    }
+    .epic-lede strong { color: var(--text-dark); font-weight: 700; }
+
+    /* ══════════════════════════════════════ Hero / PROLOGUE — 全滿版 cinematic hero ══════════════════════════════════════ */
+    .hero {
+      min-height: 88vh;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      background-image: url('assets/hero-fullbleed.png');
+      background-size: cover;
+      background-position: right center;
+      background-repeat: no-repeat;
+      background-color: #B5E2F5;  /* 圖載入前的淡藍備用色 */
+      padding: 96px 0 56px;
+    }
+    /* hero 背景：靜態高清溫馨圖 + Ken Burns 緩慢推近（桌機）、手機隱藏 */
+    .hero-bg-kb {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: right center;
+      z-index: 0;
+      transform-origin: 62% 52%;
+      animation: heroKenBurns 26s ease-in-out infinite alternate;
+      will-change: transform;
+    }
+    @keyframes heroKenBurns {
+      from { transform: scale(1.03); }
+      to   { transform: scale(1.24); }
+    }
+    @media (max-width: 991px) { .hero-bg-kb { display: none; } }
+    /* 左側淡色漸層 — 確保文字面板可讀 */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(250, 248, 241, 0.93) 0%,
+        rgba(250, 248, 241, 0.85) 18%,
+        rgba(250, 248, 241, 0.55) 36%,
+        rgba(250, 248, 241, 0.18) 50%,
+        transparent 62%
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+    /* 底部 grass-block 條紋（保留銜接 01 章） */
+    .hero::after {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 14px;
+      background:
+        linear-gradient(180deg,
+          var(--grass-deep) 0 4px,
+          var(--dirt-brown) 4px 14px);
+      z-index: 3;
+    }
+
+    .hero-main {
+      display: block;  /* 滿版背景 — panel 靠真實左側，不被 container 居中 */
+      position: relative;
+      z-index: 2;
+    }
+    /* 桌機特例：hero 區 container 突破置中、靠左貼齊白漸層區 */
+    @media (min-width: 992px) {
+      .hero .container-wide {
+        max-width: none;
+        margin: 0;
+        padding-left: clamp(48px, 5vw, 96px);
+        padding-right: 48px;
+      }
+    }
+    @media (max-width: 991px) {
+      .hero {
+        background-image: none;  /* 手機回到藍天漸層 + wood-frame 圖 */
+        background:
+          linear-gradient(180deg,
+            #93D7F5 0%,
+            #B5E2F5 22%,
+            #E8F2DA 58%,
+            #C8E5B0 82%,
+            var(--grass-green) 100%);
+        min-height: auto;
+        padding: 56px 0 40px;
+      }
+      .hero::before { display: none; }
+      .hero-main {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 36px;
+      }
+    }
+    /* ── 左側 text panel — 緊湊型，剛好落在白漸層內、不壓角色 ── */
+    .hero-panel {
+      max-width: 460px;  /* 配合滿版圖：寬到角色區會擋人，這寬度剛好在左 28-30% 內 */
+      padding: 0;
+    }
+    @media (max-width: 991px) {
+      .hero-panel { max-width: 100%; }
+    }
+
+    /* ── 圖（手機 only：wood-frame thumbnail；桌機隱藏，用滿版背景） ── */
+    .hero-visual {
+      display: none;  /* 桌機：藏 — 用 .hero 的滿版 background-image */
+      position: relative;
+      width: 100%;
+      padding: 14px;
+      background:
+        repeating-linear-gradient(90deg,
+          #A68045 0 18px,
+          #8E6B36 18px 22px,
+          #B58A4F 22px 44px,
+          #8E6B36 44px 48px);
+      border: 4px solid var(--text-dark);
+      box-sizing: border-box;
+      box-shadow:
+        inset 0 4px 0 0 rgba(255,255,255,0.18),
+        inset 0 -5px 0 0 rgba(0,0,0,0.25),
+        inset 4px 0 0 0 rgba(255,255,255,0.10),
+        inset -4px 0 0 0 rgba(0,0,0,0.20),
+        12px 14px 0 rgba(0,0,0,0.18);
+    }
+    .hero-visual img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: 75% center;  /* 往右偏 25%，焦點 Steve+電腦 */
+      display: block;
+      border: 2px solid rgba(0,0,0,0.4);
+    }
+    @media (max-width: 991px) {
+      .hero-visual {
+        display: block;
+        aspect-ratio: 4/3;  /* 4:3 比 21:9 更方，左側 Alex/狗/看書男孩會被裁掉 */
+      }
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 22px;
+      background: var(--bg-white);
+      border: 2px solid var(--grass-green);
+      color: var(--grass-text);
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 1rem;          /* 0.66 → 1rem，Pixelify Sans 字寬窄要加大 */
+      font-weight: 700;
+      letter-spacing: 1.5px;     /* 2 → 1.5，新字體不需要這麼鬆 */
+      margin-bottom: 28px;
+      box-shadow: 0 4px 0 var(--grass-deep);
+    }
+
+    .hero-title {
+      font-size: clamp(2.2rem, 5.5vw, 4rem);
+      font-weight: 900;
+      line-height: 1.12;
+      letter-spacing: -1.5px;
+      color: var(--text-dark);
+      margin: 0 0 28px;
+    }
+    .hero-title .pop {
+      color: var(--orange-deep);
+      background: linear-gradient(180deg,
+        transparent 0 55%,
+        var(--sun-yellow) 55% 92%,
+        transparent 92%);
+      padding: 0 6px;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+    .hero-title .strike {
+      text-decoration: line-through;
+      color: var(--text-mute);
+      font-weight: 700;
+    }
+
+    .hero-sub {
+      font-size: clamp(1.05rem, 1.7vw, 1.32rem);
+      line-height: 1.7;
+      color: var(--text-mute);
+      max-width: 540px;
+      margin: 0 0 36px;
+    }
+    @media (max-width: 991px) { .hero-sub { margin: 0 auto 36px; } }
+    .hero-sub strong { color: var(--text-dark); font-weight: 700; }
+
+    .hero-actions {
+      display: flex;
+      gap: 18px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    @media (max-width: 991px) { .hero-actions { justify-content: center; } }
+
+    /* 麥塊風主 CTA 按鈕 — 3D 凸起、按下凹陷 */
+    .btn-block {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 32px;
+      background: var(--orange);
+      color: var(--text-dark);
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: 1.08rem;
+      font-weight: 900;
+      letter-spacing: 1px;
+      border: 3px solid var(--text-dark);
+      cursor: pointer;
+      box-shadow:
+        0 6px 0 var(--orange-deep),
+        0 6px 0 3px var(--text-dark);
+      transition: all 0.12s ease;
+      text-decoration: none;
+      position: relative;
+    }
+    .btn-block:hover {
+      transform: translateY(-2px);
+      box-shadow:
+        0 8px 0 var(--orange-deep),
+        0 8px 0 3px var(--text-dark);
+    }
+    .btn-block:active {
+      transform: translateY(4px);
+      box-shadow:
+        0 2px 0 var(--orange-deep),
+        0 2px 0 3px var(--text-dark);
+    }
+    .btn-block .arrow { font-family: 'Pixelify Sans', monospace; font-size: 1.1rem; font-weight: 700; }
+    .btn-block .pixel-tag {
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 0.92rem;       /* 0.6 → 0.92，Pixelify Sans 加大 */
+      font-weight: 700;
+      letter-spacing: 1px;
+      background: var(--text-dark);
+      color: var(--sun-yellow);
+      padding: 5px 10px;
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-mute);
+      font-size: 0.96rem;
+      text-decoration: none;
+      font-weight: 700;
+      border-bottom: 2px dashed var(--text-mute);
+      padding-bottom: 2px;
+    }
+    .btn-ghost:hover { color: var(--orange-deep); border-bottom-color: var(--orange-deep); }
+
+    /* 手機 hero 元件縮放 — 必須在所有 base 定義之後才能正確 override */
+    @media (max-width: 575px) {
+      .hero-eyebrow {
+        font-size: 0.85rem;       /* 0.46 → 0.85，Pixelify Sans 加大 */
+        letter-spacing: 1.2px;
+        padding: 9px 16px;
+        white-space: nowrap;
+      }
+      .hero-title { font-size: 1.85rem; letter-spacing: -0.5px; }
+      .hero-sub { font-size: 1rem; }
+      .btn-block {
+        padding: 14px 20px;
+        font-size: 0.96rem;
+        gap: 10px;
+      }
+      .btn-block .pixel-tag {
+        font-size: 0.78rem;       /* 0.5 → 0.78，Pixelify Sans 加大 */
+        padding: 4px 8px;
+      }
+      .btn-block .arrow { font-size: 0.95rem; }
+    }
+
+    /* HUD 統計列 — 獨立 bar 在 hero 下方 */
+    .hero-hud-bar {
+      background: var(--bg-white);
+      padding: 36px 0;
+      border-bottom: 3px solid var(--line-soft);
+      position: relative;
+    }
+    .hero-hud {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+    @media (max-width: 575px) {
+      .hero-hud { grid-template-columns: 1fr 1fr; gap: 14px; }
+      .hero-hud-cell:nth-child(3) { grid-column: 1 / -1; }
+    }
+    .hero-hud-cell { display: flex; flex-direction: column; gap: 4px; }
+    .hero-hud-num {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: clamp(2.2rem, 5.2vw, 3.4rem);
+      font-weight: 900;
+      color: var(--grass-deep);
+      line-height: 1;
+      letter-spacing: -1px;
+      text-shadow:
+        2px 2px 0 var(--grass-green),
+        4px 4px 0 rgba(58, 138, 44, 0.35);
+    }
+    .hero-hud-label {
+      font-size: 0.96rem;
+      font-weight: 800;
+      color: var(--text-dark);
+    }
+    .hero-hud-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 2px;
+      color: var(--text-mute);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    /* ══════════════════════════════════════ 01 BIOME · 痛點 ══════════════════════════════════════ */
+    .biome-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      margin-top: 40px;
+    }
+    @media (max-width: 991px) { .biome-grid { grid-template-columns: 1fr; gap: 16px; } }
+    .biome-card {
+      background: var(--bg-white);
+      border: 3px solid var(--text-dark);
+      padding: 28px 24px;
+      position: relative;
+      box-shadow: 0 6px 0 var(--text-dark);
+    }
+    .biome-card-num {
+      position: absolute;
+      top: -16px; left: 20px;
+      width: 36px; height: 36px;
+      background: var(--tnt-red);
+      color: var(--bg-white);
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 0.84rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid var(--text-dark);
+      box-shadow: 0 3px 0 var(--text-dark);
+    }
+    .biome-card h3 {
+      font-size: 1.32rem;
+      font-weight: 900;
+      color: var(--text-dark);
+      margin: 16px 0 12px;
+      letter-spacing: -0.3px;
+    }
+    .biome-card p {
+      font-size: 0.96rem;
+      color: var(--text-mute);
+      margin: 0;
+      line-height: 1.65;
+    }
+    .biome-card p strong { color: var(--tnt-text); font-weight: 800; }
+
+    /* ══════════════════════════════════════ 02 PORTAL · 為什麼是出路 ══════════════════════════════════════ */
+    .portal-wrap {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 56px;
+      align-items: center;
+    }
+    @media (max-width: 991px) { .portal-wrap { grid-template-columns: 1fr; gap: 32px; } }
+    .portal-list {
+      list-style: none;
+      padding: 0;
+      margin: 32px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .portal-list li {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 20px;
+      padding: 18px;
+      background: var(--bg-white);
+      border-left: 6px solid var(--grass-green);
+      box-shadow: 0 3px 0 var(--line-dim);
+      align-items: center;
+    }
+    .portal-list-ico {
+      width: 72px; height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .portal-list-ico img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+    .portal-list h4 {
+      font-size: 1.08rem;
+      font-weight: 900;
+      color: var(--text-dark);
+      margin: 0 0 4px;
+    }
+    .portal-list p {
+      font-size: 0.92rem;
+      color: var(--text-mute);
+      margin: 0;
+      line-height: 1.55;
+    }
+
+    .portal-visual {
+      aspect-ratio: 4/3;
+      background: var(--bg-white);
+      border: 4px solid var(--text-dark);
+      box-shadow: 0 8px 0 var(--text-dark);
+      overflow: hidden;
+    }
+    .portal-visual img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .portal-visual-placeholder {
+      width: 100%; height: 100%;
+      background:
+        radial-gradient(ellipse at center, var(--sun-yellow) 0%, transparent 60%),
+        repeating-linear-gradient(45deg, var(--bg-soft) 0 20px, var(--bg-light) 20px 40px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 0.7rem;
+      color: var(--text-mute);
+      letter-spacing: 1.5px;
+    }
+
+    /* ══════════════════════════════════════ 03 GAMEPLAY · 孩子會做什麼 ══════════════════════════════════════ */
+    .gameplay-deck {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+      margin-top: 40px;
+    }
+    @media (max-width: 768px) {
+      .gameplay-deck { grid-template-columns: 1fr; gap: 16px; }
+    }
+    .gameplay-card {
+      background: var(--bg-white);
+      border: 3px solid var(--text-dark);
+      box-shadow: 0 6px 0 var(--text-dark);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+    .gameplay-card-img {
+      aspect-ratio: 16/9;
+      background:
+        linear-gradient(0deg, var(--grass-glow) 0%, transparent 60%),
+        var(--bg-soft);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 0.7rem;
+      color: var(--text-mute);
+      letter-spacing: 1.5px;
+      border-bottom: 3px solid var(--text-dark);
+    }
+    .gameplay-card-img img,
+    .gameplay-card-img video { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gameplay-card-body { padding: 24px 22px; }
+    .gameplay-card-tag {
+      display: inline-block;
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 1.5px;
+      color: var(--text-dark);
+      background: var(--grass-glow);
+      padding: 5px 10px;
+      margin-bottom: 12px;
+    }
+    .gameplay-card h3 {
+      font-size: 1.32rem;
+      font-weight: 900;
+      color: var(--text-dark);
+      margin: 0 0 10px;
+      letter-spacing: -0.3px;
+      line-height: 1.3;
+    }
+    .gameplay-card p {
+      font-size: 0.96rem;
+      color: var(--text-mute);
+      margin: 0;
+      line-height: 1.6;
+    }
+    .gameplay-card .code-snippet {
+      margin-top: 14px;
+      padding: 10px 12px;
+      background: #2D2A24;
+      color: #A8E6A0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      line-height: 1.6;
+      border: 2px solid var(--text-dark);
+    }
+    .gameplay-card .code-snippet .com { color: #7A8A7A; }
+
+    /* ══════════════════════════════════════ 04 FLEXIBILITY · 彈性學習 ══════════════════════════════════════ */
+    .chapter#flexibility {
+      background: var(--bg-soft);
+      position: relative;
+    }
+    .flex-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 18px;
+      margin-top: 40px;
+    }
+    @media (max-width: 991px) { .flex-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .flex-grid { grid-template-columns: 1fr; } }
+
+    .flex-card {
+      background: var(--bg-white);
+      border: 3px solid var(--text-dark);
+      padding: 28px 22px 24px;
+      box-shadow: 0 6px 0 var(--text-dark);
+      text-align: center;
+      position: relative;
+    }
+    .flex-card-ico {
+      width: 132px; height: 132px;
+      margin: -8px auto 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+    .flex-card-ico img {
+      width: 100%; height: 100%;
+      object-fit: contain;
+      display: block;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.15));
+      transition: transform 0.3s ease;
+    }
+    .flex-card:hover .flex-card-ico img { transform: translateY(-4px) scale(1.04); }
+    @media (max-width: 480px) {
+      .flex-card-ico { width: 110px; height: 110px; }
+    }
+    .flex-card h4 {
+      font-size: 1.08rem;
+      font-weight: 900;
+      color: var(--text-dark);
+      margin: 0 0 8px;
+    }
+    .flex-card p {
+      font-size: 0.88rem;
+      color: var(--text-mute);
+      margin: 0;
+      line-height: 1.55;
+    }
+    .flex-card p strong { color: var(--text-dark); }
+
+    .flex-callout {
+      max-width: 880px;
+      margin: 40px auto 0;
+      padding: 24px 28px;
+      background: var(--bg-white);
+      border: 3px dashed var(--grass-green);
+      text-align: center;
+      font-size: 1rem;
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+    .flex-callout strong { color: var(--grass-text); }
+
+    /* ══════════════════════════════════════ 05 ACADEMY · 橘蘋師資 ══════════════════════════════════════ */
+    .academy-wrap {
+      display: grid;
+      grid-template-columns: 1fr 1.3fr;
+      gap: 48px;
+      align-items: center;
+    }
+    @media (max-width: 991px) { .academy-wrap { grid-template-columns: 1fr; gap: 32px; } }
+    .academy-stats {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .academy-stat {
+      padding: 20px 22px;
+      background: var(--bg-white);
+      border: 3px solid var(--text-dark);
+      box-shadow: 0 4px 0 var(--text-dark);
+    }
+    .academy-stat-num {
+      font-family: 'Noto Sans TC', sans-serif;
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      font-weight: 900;
+      color: var(--orange-deep);
+      letter-spacing: -1px;
+      line-height: 1;
+      margin-bottom: 8px;
+      text-shadow:
+        2px 2px 0 rgba(255,163,0,0.35);
+    }
+    .academy-stat-label {
+      font-size: 0.96rem;
+      color: var(--text-mute);
+      font-weight: 700;
+      line-height: 1.4;
+    }
+    .academy-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .academy-list li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 16px;
+      padding: 14px 18px;
+      background: var(--bg-white);
+      border-left: 6px solid var(--orange);
+      align-items: start;
+    }
+    .academy-list li::before {
+      content: '✓';
+      font-family: 'Pixelify Sans', monospace;
+      color: var(--grass-green);
+      font-size: 1rem;
+      padding-top: 2px;
+    }
+    .academy-list h4 {
+      font-size: 1.02rem;
+      font-weight: 900;
+      color: var(--text-dark);
+      margin: 0 0 4px;
+    }
+    .academy-list p {
+      font-size: 0.92rem;
+      color: var(--text-mute);
+      margin: 0;
+      line-height: 1.55;
+    }
+
+    /* ══════════════════════════════════════ 06 BLUEPRINT · 課程地圖 ══════════════════════════════════════ */
+    .blueprint-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-top: 40px;
+    }
+    @media (max-width: 991px) {
+      .blueprint-grid {
+        display: flex;
+        flex-direction: row;
+        gap: 14px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding: 6px 22px 18px;
+        margin: 40px -22px 0;
+        scrollbar-width: none;
+      }
+      .blueprint-grid::-webkit-scrollbar { display: none; }
+      .blueprint-card { flex: 0 0 84%; scroll-snap-align: start; }
+    }
+    .blueprint-card {
+      background: var(--bg-white);
+      border: 3px solid var(--text-dark);
+      padding: 26px 22px 22px;
+      box-shadow: 0 6px 0 var(--text-dark);
+      position: relative;
+    }
+    .blueprint-card-stage {
+      display: inline-block;
+      padding: 6px 12px;
+      background: var(--grass-green);
+      color: var(--bg-white);
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 1.5px;
+      margin-bottom: 14px;
+      white-space: nowrap;  /* 標籤完整不換行 */
+    }
+    @media (max-width: 575px) {
+      .blueprint-card-stage { font-size: 0.68rem; letter-spacing: 1px; padding: 6px 10px; }
+    }
+    .blueprint-card-stage.s2 { background: var(--sky-blue); }
+    .blueprint-card-stage.s3 { background: var(--orange); color: var(--text-dark); }
+    .blueprint-card h3 {
+      font-size: 1.32rem;
+      font-weight: 900;
+      color: var(--text-dark);
+      margin: 0 0 10px;
+      letter-spacing: -0.3px;
+    }
+    .blueprint-card-sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-mute);
+      letter-spacing: 1.5px;
+      margin-bottom: 16px;
+    }
+    .blueprint-card ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      border-top: 2px dashed var(--line-dim);
+      padding-top: 14px;
+    }
+    .blueprint-card ul li {
+      font-size: 0.92rem;
+      color: var(--text-dark);
+      padding: 6px 0;
+      display: grid;
+      grid-template-columns: 18px 1fr;
+      gap: 8px;
+    }
+    .blueprint-card ul li::before {
+      content: '▸';
+      color: var(--grass-green);
+      font-weight: 900;
+    }
+    .blueprint-card-foot {
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 2px dashed var(--line-dim);
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 1.5px;
+      line-height: 1.7;
+      color: var(--text-mute);
+    }
+    @media (max-width: 575px) {
+      .blueprint-card-foot { font-size: 0.64rem; letter-spacing: 0.8px; line-height: 1.6; }
+    }
+    /* STAGE 3 未解鎖 / 籌備中：虛線框 + soft 底，不動不透明度以保 WCAG */
+    .blueprint-card.soon {
+      border-style: dashed;
+      background: var(--bg-soft);
+    }
+    .blueprint-card-soon {
+      font-size: 1rem;
+      color: var(--text-dark);
+      line-height: 1.75;
+      margin: 0 0 16px;
+    }
+
+    /* ══════════════════════════════════════ 07 SPAWN · 報名方式 ══════════════════════════════════════ */
+    .spawn-pair {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 40px;
+    }
+    @media (max-width: 991px) {
+      .spawn-pair {
+        display: flex;
+        flex-direction: row;
+        gap: 14px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding: 6px 22px 18px;
+        margin: 40px -22px 0;
+        scrollbar-width: none;
+      }
+      .spawn-pair::-webkit-scrollbar { display: none; }
+      .spawn-card { flex: 0 0 86%; scroll-snap-align: start; }
+    }
+    .spawn-card {
+      background: var(--bg-white);
+      border: 3px solid var(--text-dark);
+      padding: 32px 28px 28px;
+      box-shadow: 0 6px 0 var(--text-dark);
+      position: relative;
+    }
+    .spawn-card-tag {
+      display: inline-block;
+      padding: 6px 14px;
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 0.66rem;
+      letter-spacing: 1.5px;
+      margin-bottom: 18px;
+    }
+    .spawn-card.path-a .spawn-card-tag {
+      background: var(--grass-green);
+      color: var(--bg-white);
+    }
+    .spawn-card.path-b .spawn-card-tag {
+      background: var(--sky-blue);
+      color: var(--bg-white);
+    }
+    .spawn-card h3 {
+      font-size: 1.42rem;
+      font-weight: 900;
+      color: var(--text-dark);
+      margin: 0 0 14px;
+      letter-spacing: -0.3px;
+    }
+    .spawn-card p {
+      font-size: 0.98rem;
+      color: var(--text-mute);
+      line-height: 1.65;
+      margin: 0 0 16px;
+    }
+    .spawn-card p strong { color: var(--text-dark); }
+    .spawn-card-arrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      color: var(--orange-deep);
+      padding: 8px 12px;
+      background: var(--bg-light);
+      border: 2px dashed var(--orange);
+    }
+
+    /* ══════════════════════════════════════ 08 ACHIEVEMENT · 完課成就 ══════════════════════════════════════ */
+    .ach-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 22px;
+      margin-top: 40px;
+    }
+    @media (max-width: 991px) { .ach-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 575px) { .ach-grid { grid-template-columns: 1fr; } }
+
+    .ach-card {
+      background: var(--bg-white);
+      border: 3px solid var(--text-dark);
+      padding: 24px 22px 22px;
+      box-shadow: 0 6px 0 var(--text-dark);
+      position: relative;
+    }
+    .ach-card::before {
+      content: '★';
+      position: absolute;
+      top: -14px; right: 18px;
+      width: 36px; height: 36px;
+      background: var(--sun-yellow);
+      color: var(--text-dark);
+      font-size: 1.2rem;
+      font-weight: 900;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid var(--text-dark);
+      box-shadow: 0 3px 0 var(--text-dark);
+    }
+    .ach-card-eyebrow {
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 2px;
+      color: var(--sun-yellow);
+      background: var(--text-dark);
+      display: inline-block;
+      padding: 5px 10px;
+      margin-bottom: 12px;
+    }
+    .ach-card h3 {
+      font-size: 1.18rem;
+      font-weight: 900;
+      color: var(--text-dark);
+      margin: 0 0 10px;
+      letter-spacing: -0.3px;
+      line-height: 1.3;
+    }
+    .ach-card p {
+      font-size: 0.92rem;
+      color: var(--text-mute);
+      margin: 0;
+      line-height: 1.6;
+    }
+
+    .ach-soft-note {
+      max-width: 760px;
+      margin: 40px auto 0;
+      text-align: center;
+      font-size: 0.94rem;
+      color: var(--text-mute);
+      padding: 18px;
+      border-top: 2px dashed var(--line-dim);
+    }
+
+    /* ══════════════════════════════════════ 09 INVENTORY · FAQ ══════════════════════════════════════ */
+    .inv-list {
+      max-width: 880px;
+      margin: 40px auto 0;
+      list-style: none;
+      padding: 0;
+      border-top: 2px solid var(--text-dark);
+    }
+    .inv-item {
+      border-bottom: 2px solid var(--line-dim);
+      padding: 22px 0;
+    }
+    .inv-q {
+      display: grid;
+      grid-template-columns: 96px 1fr 32px;  /* 96px：放得下 Pixelify Sans 字體的「FILE.0X」7 字符寬 */
+      gap: 16px;
+      align-items: baseline;
+      cursor: pointer;
+    }
+    .inv-q-num {
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 0.68rem;
+      color: var(--orange-deep);
+      letter-spacing: 1.5px;
+    }
+    .inv-q-text {
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.45;
+    }
+    .inv-q-toggle {
+      width: 32px; height: 32px;
+      background: var(--orange);
+      color: var(--text-dark);
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 0.88rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid var(--text-dark);
+      transition: transform 0.3s;
+    }
+    .inv-item.open .inv-q-toggle {
+      transform: rotate(45deg);
+      background: var(--grass-green);
+      color: var(--bg-white);
+    }
+    .inv-a {
+      display: grid;
+      grid-template-columns: 96px 1fr;  /* 對齊 .inv-q 第一欄寬度 */
+      gap: 16px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, margin-top 0.3s ease;
+    }
+    .inv-item.open .inv-a {
+      max-height: 700px;
+      margin-top: 16px;
+    }
+    .inv-a-inner {
+      grid-column: 2;
+      font-size: 0.96rem;
+      color: var(--text-mute);
+      line-height: 1.75;
+    }
+    .inv-a-inner strong { color: var(--text-dark); }
+    @media (max-width: 768px) {
+      .inv-q {
+        grid-template-columns: 1fr 28px;
+        grid-template-rows: auto auto;
+        gap: 6px 12px;
+      }
+      .inv-q-num { grid-column: 1 / -1; grid-row: 1; }
+      .inv-q-text { grid-column: 1; grid-row: 2; font-size: 1rem; }
+      .inv-q-toggle { grid-column: 2; grid-row: 2; align-self: center; }
+      .inv-a { grid-template-columns: 1fr; }
+      .inv-a-inner { grid-column: 1; }
+    }
+
+    /* ══════════════════════════════════════ ENDING · CTA ══════════════════════════════════════ */
+    .ending {
+      padding: 96px 0 120px;
+      background:
+        linear-gradient(180deg, var(--bg-light) 0%, var(--grass-glow) 100%);
+      text-align: center;
+      position: relative;
+    }
+    .ending::before {
+      content: '';
+      position: absolute;
+      left: 0; right: 0; top: 0;
+      height: 12px;
+      background:
+        repeating-linear-gradient(90deg,
+          var(--grass-deep) 0 24px,
+          var(--grass-green) 24px 48px);
+    }
+    .ending-eyebrow {
+      display: inline-block;
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 0.66rem;
+      letter-spacing: 2.5px;
+      color: var(--grass-text);
+      background: var(--bg-white);
+      border: 2px solid var(--grass-green);
+      padding: 8px 16px;
+      margin-bottom: 24px;
+    }
+    .ending-headline {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 900;
+      line-height: 1.15;
+      color: var(--text-dark);
+      margin: 0 0 20px;
+      letter-spacing: -1px;
+    }
+    .ending-headline .pop {
+      color: var(--orange-deep);
+      background: linear-gradient(180deg,
+        transparent 0 55%,
+        var(--sun-yellow) 55% 92%,
+        transparent 92%);
+      padding: 0 6px;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+    .ending-sub {
+      font-size: 1.12rem;
+      color: var(--text-mute);
+      margin: 0 auto 36px;
+      max-width: 540px;
+      line-height: 1.65;
+    }
+    .ending-warn {
+      max-width: 600px;
+      margin: 28px auto 0;
+      padding: 14px 20px;
+      background: var(--bg-white);
+      border: 2px dashed var(--text-mute);
+      font-size: 0.92rem;
+      color: var(--text-mute);
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      justify-content: center;
+    }
+    .ending-warn .ico {
+      font-family: 'Pixelify Sans', monospace;
+      font-size: 0.8rem;
+      color: var(--orange-deep);
+    }
+
+    /* slide 桌機隱形（不存在於 box tree，cards 直接被 grid 排版） */
+    .flex-slide, .ach-slide { display: contents; }
+
+    /* ══════════════════════════════════════ 手機橫滑改造 — 03 / 04 / 08 ══════════════════════════════════════ */
+    @media (max-width: 575px) {
+      /* 03 GAMEPLAY — 1 張卡可見、左右滑 */
+      .gameplay-deck {
+        display: flex;
+        flex-direction: row;
+        gap: 14px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding: 6px 22px 18px;
+        margin: 40px -22px 0;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .gameplay-deck::-webkit-scrollbar { display: none; }
+      .gameplay-card { flex: 0 0 88%; scroll-snap-align: start; }
+
+      /* 04 FLEX — CSS Grid 2 列 × N 欄（每欄 = 1 slide 滿版） */
+      .flex-grid {
+        display: grid;
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: calc(100vw - 44px);
+        grid-template-rows: repeat(2, auto);
+        gap: 14px 16px;  /* row gap 14, col gap 16 */
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding: 6px 22px 18px;
+        margin: 40px -22px 0;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .flex-grid::-webkit-scrollbar { display: none; }
+      .flex-card { scroll-snap-align: start; }
+
+      /* 08 ACH — CSS Grid 3 列 × N 欄 */
+      .ach-grid {
+        display: grid;
+        grid-template-columns: none;
+        grid-auto-flow: column;
+        grid-auto-columns: calc(100vw - 44px);
+        grid-template-rows: repeat(3, auto);
+        gap: 14px 16px;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        padding: 6px 22px 18px;
+        margin: 40px -22px 0;
+        scrollbar-width: none;
+        -webkit-overflow-scrolling: touch;
+      }
+      .ach-grid::-webkit-scrollbar { display: none; }
+      .ach-card { scroll-snap-align: start; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ══════════════════════════════════════
+       PROLOGUE / HERO
+  ══════════════════════════════════════ -->
+  <section class="hero" id="prologue">
+    <img class="hero-bg-kb" src="assets/hero-fullbleed.png" alt="" aria-hidden="true">
+    <div class="container-wide">
+      <div class="hero-main">
+        <div class="hero-panel">
+          <div class="hero-eyebrow">▸ MINECRAFT × PYTHON · 5-9 年級</div>
+
+          <h1 class="hero-title">
+            玩麥塊的熱情，<br>
+            變成寫 <span class="pop">Python</span> 的能力。
+          </h1>
+
+          <p class="hero-sub">
+            用 Python 對麥塊 Agent 下指令，<br>
+            在他最熟的世界，<strong>開始學寫真正的程式語言</strong>。<br>
+            線上互動 · 影片+真人雙師 · 45 堂玩中學程式。
+          </p>
+
+          <div class="hero-actions">
+            <button type="button" class="btn-block" data-oa-cta="hero">
+              <span class="pixel-tag">START</span>
+              預約免費試聽
+              <span class="arrow">▸</span>
+            </button>
+            <a href="#blueprint" class="btn-ghost">看完整 45 堂地圖 ↓</a>
+          </div>
+        </div>
+
+        <div class="hero-visual">
+          <img src="assets/hero-fullbleed.png" alt="麥塊 Python — 學生與角色一起在麥塊世界裡寫程式" loading="eager">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HUD bar：核心三數字 — 移出 hero 區，獨立 bar -->
+  <section class="hero-hud-bar" aria-label="課程核心數字">
+    <div class="container-wide">
+      <div class="hero-hud">
+        <div class="hero-hud-cell">
+          <span class="hero-hud-num">45</span>
+          <span class="hero-hud-label">堂課 · 3 期</span>
+          <span class="hero-hud-sub">LESSONS / SEASONS</span>
+        </div>
+        <div class="hero-hud-cell">
+          <span class="hero-hud-num">5-9</span>
+          <span class="hero-hud-label">年級 · 國小 → 國中</span>
+          <span class="hero-hud-sub">GRADE RANGE</span>
+        </div>
+        <div class="hero-hud-cell">
+          <span class="hero-hud-num">∞</span>
+          <span class="hero-hud-label">調課次數 · 期內任調</span>
+          <span class="hero-hud-sub">FLEXIBLE SCHEDULING</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       01 / BIOME · 痛點
+  ══════════════════════════════════════ -->
+  <section class="chapter chapter-white" id="biome">
+    <div class="container-wide">
+      <div class="chapter-header">
+        <span class="chapter-num">01 / 09</span>
+        <span class="chapter-name">BIOME</span>
+        <span class="chapter-tag">家長的處境</span>
+      </div>
+
+      <h2 class="epic-headline">
+        孩子玩麥塊這幾年，<br>
+        家長想知道 — <span class="accent">怎麼接續下去</span>？
+      </h2>
+      <p class="epic-lede">
+        5-9 年級是孩子<strong>從「玩」走向「能力累積」</strong>的關鍵階段。<br>
+        每位家長的處境不同，但常見的三個願望都很真實。
+      </p>
+
+      <div class="biome-grid" data-aos="fade-up">
+        <div class="biome-card">
+          <span class="biome-card-num">A</span>
+          <h3>希望熱情能變成能力</h3>
+          <p>孩子玩麥塊已經<strong>幾百個小時</strong>。家長想知道：這份投入有沒有可能，變成<strong>真正的程式語言能力</strong>？</p>
+        </div>
+        <div class="biome-card">
+          <span class="biome-card-num">B</span>
+          <h3>需要彈性的學習節奏</h3>
+          <p>5-9 年級開始<strong>課業、才藝、學校活動全面增加</strong>。家長想要的是：能配合行程、不會因為缺課就跟不上的課。</p>
+        </div>
+        <div class="biome-card">
+          <span class="biome-card-num">C</span>
+          <h3>讓孩子在最熟的世界開始</h3>
+          <p>家長都希望孩子<strong>保有對程式的好奇</strong>。最自然的方式，是在他已經投入這麼多時間的麥塊世界裡，認識真正的程式語言。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       02 / PORTAL · 為什麼是出路
+  ══════════════════════════════════════ -->
+  <section class="chapter" id="portal">
+    <div class="container-wide">
+      <div class="chapter-header">
+        <span class="chapter-num">02 / 09</span>
+        <span class="chapter-name">PORTAL</span>
+        <span class="chapter-tag">為什麼麥塊 Python 是出路</span>
+      </div>
+
+      <div class="portal-wrap">
+        <div>
+          <h2 class="epic-headline">
+            不換軌道，<br>
+            在<span class="grass">原本的世界裡</span>繼續往前。
+          </h2>
+          <p class="epic-lede">
+            麥塊 Python 把孩子最害怕的「換新工具、學新語法」拆掉。<br>
+            <strong>世界是熟的、角色是熟的、操作邏輯是熟的</strong>，<br>
+            只是換成用 Python 對 Agent 下指令。
+          </p>
+
+          <ul class="portal-list">
+            <li>
+              <span class="portal-list-ico"><img src="assets/portal-ico-world.png" alt="麥塊世界" loading="lazy"></span>
+              <div>
+                <h4>世界沒變，是 Minecraft</h4>
+                <p>他熟悉的方塊、生物、地形、機制 — 全部都還在。降低 70% 啟動門檻。</p>
+              </div>
+            </li>
+            <li>
+              <span class="portal-list-ico"><img src="assets/portal-ico-agent.png" alt="Agent 機器人" loading="lazy"></span>
+              <div>
+                <h4>用「指揮 Agent」當切入</h4>
+                <p>不是無聊地寫程式，是讓 Agent 幫他蓋房子、挖礦、做事 — 動機自然而強。</p>
+              </div>
+            </li>
+            <li>
+              <span class="portal-list-ico"><img src="assets/portal-ico-python.png" alt="Python 語法" loading="lazy"></span>
+              <div>
+                <h4>真實的 Python 語法</h4>
+                <p>不是圖形拖拉、不是兒童玩具語言。從第一堂課就在寫真正的 Python — 寫完直接看到 Agent 動。</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="portal-visual">
+          <img src="assets/portal-bridge1.png" alt="從熟悉的麥塊世界，走向 Python 程式語言的橋梁" loading="lazy">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       03 / GAMEPLAY · 孩子會做什麼
+  ══════════════════════════════════════ -->
+  <section class="chapter chapter-alt" id="gameplay">
+    <div class="container-wide">
+      <div class="chapter-header">
+        <span class="chapter-num">03 / 09</span>
+        <span class="chapter-name">GAMEPLAY</span>
+        <span class="chapter-tag">他會做什麼？</span>
+      </div>
+
+      <h2 class="epic-headline">
+        寫一行 Python，<br>
+        Agent 就在世界裡<span class="accent">動起來。</span>
+      </h2>
+      <p class="epic-lede">
+        孩子實際在課堂上做的事 — <strong>用 Python 對麥塊 Agent 下指令</strong>，
+        召喚、挖礦、建造、自動化整個 Minecraft 世界。
+      </p>
+
+      <div class="gameplay-deck">
+        <div class="gameplay-card">
+          <div class="gameplay-card-img">
+            <video class="gp-video" poster="assets/gp-chicken-poster.jpg" muted loop playsinline preload="none" aria-label="天上掉雞：一行迴圈連續召喚 100 隻雞從空中灑落">
+              <source src="assets/gp-chicken.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="gameplay-card-body">
+            <span class="gameplay-card-tag">▸ SPAWN · 天上掉雞</span>
+            <h3>打一個字，天上掉下 100 隻雞</h3>
+            <p>一個迴圈連續召喚生物，天空就隨機灑落一大群小雞。孩子第一次親眼看到「寫程式」的威力。</p>
+            <div class="code-snippet">
+<span class="com"># 天上隨機生成 100 隻雞</span><br>
+for i in range(100):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mobs.spawn(CHICKEN, random_pos)
+            </div>
+          </div>
+        </div>
+
+        <div class="gameplay-card">
+          <div class="gameplay-card-img">
+            <video class="gp-video" poster="assets/gp-mine-poster.jpg" muted loop playsinline preload="none" aria-label="Agent 自動挖礦：迴圈讓 Agent 邊挖邊前進，挖出可通行隧道">
+              <source src="assets/gp-mine.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="gameplay-card-body">
+            <span class="gameplay-card-tag">▸ AGENT · 自動挖礦</span>
+            <h3>讓 Agent 自己挖一條隧道</h3>
+            <p>寫一個迴圈，Agent 就邊挖邊前進，還會把上方也挖高，留出人能走的隧道。</p>
+            <div class="code-snippet">
+<span class="com"># Agent 挖一條隧道</span><br>
+for i in range(10):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent.destroy(FORWARD)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent.move(FORWARD, 1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent.destroy(UP)
+            </div>
+          </div>
+        </div>
+
+        <div class="gameplay-card">
+          <div class="gameplay-card-img">
+            <video class="gp-video" poster="assets/gp-castle-poster.jpg" muted loop playsinline preload="none" aria-label="蓋城堡：改一個變數 size，城堡就從小屋變成巨堡">
+              <source src="assets/gp-castle.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="gameplay-card-body">
+            <span class="gameplay-card-tag">▸ BUILD · 蓋一座城堡</span>
+            <h3>改一個數字，城堡就變大</h3>
+            <p>用 blocks.fill 一次填出整塊、再挖空成牆。改變 size 這個變數，城堡立刻從小屋變巨堡。</p>
+            <div class="code-snippet">
+size = 6&nbsp;&nbsp;<span class="com"># 改這個數字城堡就變大</span><br>
+def build_castle():<br>
+&nbsp;&nbsp;&nbsp;&nbsp;blocks.fill(STONE_BRICKS,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;pos(3,0,0), pos(3+size,size,size))
+            </div>
+          </div>
+        </div>
+
+        <div class="gameplay-card">
+          <div class="gameplay-card-img">
+            <video class="gp-video" poster="assets/gp-farm-poster.jpg" muted loop playsinline preload="none" aria-label="自動種田：Agent 一路耕地並撒下種子，種出整排農田">
+              <source src="assets/gp-farm.mp4" type="video/mp4">
+            </video>
+          </div>
+          <div class="gameplay-card-body">
+            <span class="gameplay-card-tag">▸ FARM · 自動耕種</span>
+            <h3>一整排農地，自動耕好種好</h3>
+            <p>Agent 一邊把泥土耕成農地、一邊往前走、一邊撒下種子，整排農田幾秒就種完。</p>
+            <div class="code-snippet">
+<span class="com"># 自動耕種一整排</span><br>
+for i in range(8):<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent.till(FORWARD)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent.move(FORWARD, 1)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent.place(DOWN)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── grass-block 分隔條 ── -->
+  <div class="grass-strip" aria-hidden="true"></div>
+
+  <!-- ══════════════════════════════════════
+       04 / FLEXIBILITY · 彈性學習 🆕 重大新章節
+  ══════════════════════════════════════ -->
+  <section class="chapter" id="flexibility">
+    <div class="container-wide">
+      <div class="chapter-header">
+        <span class="chapter-num">04 / 09</span>
+        <span class="chapter-name">FLEXIBILITY</span>
+        <span class="chapter-tag">線上 · 彈性學習 · 不會中斷</span>
+      </div>
+
+      <h2 class="epic-headline">
+        在家就能上，<br>
+        家長行程<span class="accent">不再被綁住</span>。
+      </h2>
+      <p class="epic-lede">
+        5-9 年級家長最焦慮的「課表衝突、孩子缺一堂跟不上、不能接送」<br>
+        橘蘋的線上設計把這些痛點全部拆掉。
+      </p>
+
+      <div class="flex-grid" data-aos="fade-up">
+        <div class="flex-slide">
+        <div class="flex-card">
+          <div class="flex-card-ico">
+            <img src="assets/flex-online.png" alt="100% 線上互動" loading="lazy">
+          </div>
+          <h4>100% 線上互動</h4>
+          <p>不用接送、不用出門。<strong>在家、在阿嬤家、在出差路上</strong>都能上。</p>
+        </div>
+        <div class="flex-card">
+          <div class="flex-card-ico">
+            <img src="assets/flex-infinity.png" alt="無調課次數限制" loading="lazy">
+          </div>
+          <h4>無調課次數限制</h4>
+          <p>每一堂課都能彈性調整時段，<strong>沒有次數上限</strong>。只要在該期上課期限內完成所有課程即可（例：1 期 15 堂 / 15 週內上完）。</p>
+        </div>
+        </div>
+        <div class="flex-slide">
+        <div class="flex-card">
+          <div class="flex-card-ico">
+            <img src="assets/flex-schedule.png" alt="24 小時前彈性調課" loading="lazy">
+          </div>
+          <h4>24 小時前彈性調課</h4>
+          <p>家長在<strong>橘蘋官網家長平台</strong>自助調課，最晚前一天 24:00 前完成。可調入<strong>未來 3 - 60 天</strong>內任何時段。</p>
+        </div>
+        <div class="flex-card">
+          <div class="flex-card-ico">
+            <img src="assets/flex-dual.png" alt="雙師制 — 影片講師加真人輔導" loading="lazy">
+          </div>
+          <h4>雙師制</h4>
+          <p>影片由<strong>資深講師預錄教學內容</strong>，搭配<strong>線上真人輔導老師</strong>互動帶領，孩子卡住會立刻被接住。</p>
+        </div>
+        </div>
+      </div>
+
+      <div class="flex-callout">
+        <strong>為什麼這對 5-9 年級家長特別重要？</strong><br>
+        這個年齡的孩子課業、才藝、學校活動最多 — 一堂正課漏掉，孩子的「我不想學了」就會冒出來。<br>
+        橘蘋設計的彈性，是<strong>專門對抗這個放棄點</strong>。
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       05 / ACADEMY · 橘蘋師資保證
+  ══════════════════════════════════════ -->
+  <section class="chapter chapter-white" id="academy">
+    <div class="container-wide">
+      <div class="chapter-header">
+        <span class="chapter-num">05 / 09</span>
+        <span class="chapter-name">ACADEMY</span>
+        <span class="chapter-tag">橘蘋教學保證</span>
+      </div>
+
+      <h2 class="epic-headline">
+        14 年教學經驗，<br>
+        <span class="accent">橘蘋教學部品質保證</span>。
+      </h2>
+      <p class="epic-lede">
+        橘子蘋果的教學品質來自<strong>整套系統</strong> —<br>
+        從師資篩選、教材培訓，到每堂課的影片+真人雙師制，<br>
+        確保每位孩子在線上也能獲得穩定、優質的學習體驗。
+      </p>
+
+      <div class="academy-wrap">
+        <div class="academy-stats">
+          <div class="academy-stat">
+            <div class="academy-stat-num">100+</div>
+            <div class="academy-stat-label">線上麥塊班運作中</div>
+          </div>
+          <div class="academy-stat">
+            <div class="academy-stat-num">14 年</div>
+            <div class="academy-stat-label">橘蘋程式教育累積經驗</div>
+          </div>
+          <div class="academy-stat">
+            <div class="academy-stat-num">雙師</div>
+            <div class="academy-stat-label">影片講師 + 真人線上輔導</div>
+          </div>
+        </div>
+
+        <ul class="academy-list">
+          <li>
+            <div>
+              <h4>師資嚴格篩選</h4>
+              <p>橘蘋教學部主導，每位老師都通過試教、教學評鑑與實際試帶後才能正式上線。</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h4>標準化培訓系統</h4>
+              <p>所有老師接受相同的麥塊 Python 教材培訓，確保每班節奏與品質一致。</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h4>雙師支援 — 影片講師 + 線上真人老師</h4>
+              <p>影片中由<strong>資深講師預錄教學內容</strong>，確保講解清晰精準；同時搭配<strong>線上真人輔導老師</strong>互動帶領，孩子卡住時立刻被接住。</p>
+            </div>
+          </li>
+          <li>
+            <div>
+              <h4>持續品質監控</h4>
+              <p>每期家長回饋、學員產出評估、教學部定期複訓 — 從入職到上課，全程在品質迴圈內。</p>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       06 / BLUEPRINT · 課程地圖
+  ══════════════════════════════════════ -->
+  <section class="chapter" id="blueprint">
+    <div class="container-wide">
+      <div class="chapter-header">
+        <span class="chapter-num">06 / 09</span>
+        <span class="chapter-name">BLUEPRINT</span>
+        <span class="chapter-tag">3 期 × 15 堂 = 45 堂</span>
+      </div>
+
+      <h2 class="epic-headline">
+        45 堂課的<br>
+        <span class="accent">完整建造路線</span>。
+      </h2>
+      <p class="epic-lede">
+        以 1 週 1 堂的節奏，分 3 期循序漸進。<br>
+        每期都有<strong>明確的階段成果</strong>，孩子和家長都看得到進步。
+      </p>
+
+      <div class="blueprint-grid">
+        <div class="blueprint-card">
+          <span class="blueprint-card-stage">▸ STAGE 1 · 第 1-15 堂</span>
+          <h3>Python 基礎 × Agent 入門</h3>
+          <p class="blueprint-card-sub">FIRST STEPS / 起步階段</p>
+          <ul>
+            <li>Python 語法、變數、座標</li>
+            <li>條件判斷、for / while 迴圈</li>
+            <li>指揮 Agent 移動、挖礦、建造</li>
+            <li>串列與函式入門</li>
+          </ul>
+          <div class="blueprint-card-foot">▸ 第一期結束 · 能用 Python 指揮 Agent 完成任務</div>
+        </div>
+
+        <div class="blueprint-card">
+          <span class="blueprint-card-stage s2">▸ STAGE 2 · 第 16-30 堂</span>
+          <h3>函式 × 自動化專案</h3>
+          <p class="blueprint-card-sub">AUTOMATION / 自動化階段</p>
+          <ul>
+            <li>函式帶參數、回傳值、模組化</li>
+            <li>巢狀串列打造自動農場</li>
+            <li>紅石電路、廣場像素藝術</li>
+            <li>Debug 實戰：修好壞掉的程式碼</li>
+          </ul>
+          <div class="blueprint-card-foot">▸ 第二期結束 · 能用 Python 打造一座自動化城市</div>
+        </div>
+
+        <div class="blueprint-card soon">
+          <span class="blueprint-card-stage s3">▸ STAGE 3 · 第 31-45 堂</span>
+          <h3>進階整合與自由創作</h3>
+          <p class="blueprint-card-sub">FINAL CHAPTER / 創作階段</p>
+          <p class="blueprint-card-soon">延續前兩階段，走向更完整的專案整合與個人創作。完整課綱正在籌備，隨課程開發同步公布。</p>
+          <div class="blueprint-card-foot">▸ COMING SOON · 敬請期待</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── grass-block 分隔條 ── -->
+  <div class="grass-strip" aria-hidden="true"></div>
+
+  <!-- ══════════════════════════════════════
+       07 / SPAWN · 兩條報名方式
+  ══════════════════════════════════════ -->
+  <section class="chapter chapter-alt" id="spawn">
+    <div class="container-wide">
+      <div class="chapter-header">
+        <span class="chapter-num">07 / 09</span>
+        <span class="chapter-name">SPAWN POINT</span>
+        <span class="chapter-tag">兩條報名方式</span>
+      </div>
+
+      <h2 class="epic-headline">
+        兩條路<br>
+        都能<span class="grass">進入麥塊 Python</span>。
+      </h2>
+      <p class="epic-lede">
+        不是每個孩子都上過橘蘋的麥塊基礎班，<br>
+        所以我們設計了<strong>兩條報名方式</strong>，讓不同背景的孩子都能找到合適起點。
+      </p>
+
+      <div class="spawn-pair">
+        <div class="spawn-card path-a">
+          <span class="spawn-card-tag">▸ PATH A · 推薦路徑</span>
+          <h3>已上完橘蘋麥塊教育班 3 階段</h3>
+          <p>已經有橘蘋的麥塊操作基礎、熟悉教學節奏、知道指令邏輯。<br>
+          <strong>直接報名加入</strong>，不需額外測驗。</p>
+        </div>
+
+        <div class="spawn-card path-b">
+          <span class="spawn-card-tag">▸ PATH B · 評估路徑</span>
+          <h3>5 年級以上 · 沒上過橘蘋麥塊</h3>
+          <p>只要 5 年級以上、有玩過麥塊就能評估。<br>
+          透過<strong>體驗課時老師現場觀察</strong>「<strong>打字速度</strong>」和「<strong>麥塊操作熟悉度</strong>」，<br>
+          確認能跟上節奏即可加入。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       08 / ACHIEVEMENT · 完課成就
+  ══════════════════════════════════════ -->
+  <section class="chapter chapter-white" id="achievement">
+    <div class="container-wide">
+      <div class="chapter-header">
+        <span class="chapter-num">08 / 09</span>
+        <span class="chapter-name">ACHIEVEMENT</span>
+        <span class="chapter-tag">完課後孩子帶走什麼</span>
+      </div>
+
+      <h2 class="epic-headline">
+        45 堂課後，<br>
+        孩子<span class="accent">解鎖了什麼</span>？
+      </h2>
+      <p class="epic-lede">
+        不是一張證書、不是一個分數。<br>
+        是<strong>真實的程式經驗、屬於自己的作品、未來繼續學習的選擇權</strong>。
+      </p>
+
+      <div class="ach-grid" data-aos="fade-up">
+        <div class="ach-slide">
+        <div class="ach-card">
+          <span class="ach-card-eyebrow">▸ ACHIEVEMENT 1</span>
+          <h3>真實 Python 程式經驗</h3>
+          <p>不是兒童玩具語言、不是拖拉積木。<strong>45 堂下來，孩子真的寫過幾百行 Python 程式</strong>，這是未來中學課程銜接的硬底子。</p>
+        </div>
+
+        <div class="ach-card">
+          <span class="ach-card-eyebrow">▸ ACHIEVEMENT 2</span>
+          <h3>個人作品集</h3>
+          <p>3 期累積屬於自己的麥塊作品 — 機器人、寵物、自動建築、修復系統。每件作品都<strong>由孩子親手加入創意與修改</strong>，讓麥塊世界長出獨一無二的樣子，可以驕傲地分享。</p>
+        </div>
+
+        <div class="ach-card">
+          <span class="ach-card-eyebrow">▸ ACHIEVEMENT 3</span>
+          <h3>不被嚇跑的程式信心</h3>
+          <p>5-9 年級這個關鍵期，孩子<strong>沒有放棄程式、沒有對英文程式碼產生恐懼</strong>。這比任何分數都重要。</p>
+        </div>
+        </div>
+
+        <div class="ach-slide">
+        <div class="ach-card">
+          <span class="ach-card-eyebrow">▸ ACHIEVEMENT 4</span>
+          <h3>解題思維的萌芽</h3>
+          <p>從「我要 Agent 蓋一面牆」到「我怎麼<strong>拆解</strong>這個任務」。45 堂下來，孩子開始用程式設計師的方式思考。</p>
+        </div>
+
+        <div class="ach-card">
+          <span class="ach-card-eyebrow">▸ ACHIEVEMENT 5</span>
+          <h3>未來選擇權</h3>
+          <p>先用 45 堂玩中學打好寫程式的興趣與基礎。<strong>興趣養成後</strong>，孩子自然會想往下一階段挑戰；不想繼續？至少他不會抗拒程式。</p>
+        </div>
+
+        <div class="ach-card">
+          <span class="ach-card-eyebrow">▸ ACHIEVEMENT 6</span>
+          <h3>家長真的看得到進步</h3>
+          <p>每期都有作品產出。<strong>不是只看老師回報</strong>，孩子真的在麥塊裡跑出自己寫的程式。家長看了會放心。</p>
+        </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       09 / INVENTORY · FAQ
+  ══════════════════════════════════════ -->
+  <section class="chapter" id="inventory">
+    <div class="container-wide">
+      <div class="chapter-header">
+        <span class="chapter-num">09 / 09</span>
+        <span class="chapter-name">INVENTORY</span>
+        <span class="chapter-tag">家長最常問的 12 個問題</span>
+      </div>
+
+      <h2 class="epic-headline" style="text-align: center;">
+        裝備你的<br>
+        <span class="accent">常見問題包</span>。
+      </h2>
+
+      <ol class="inv-list">
+        <li class="inv-item open" data-cat="content">
+          <div class="inv-q" onclick="this.parentElement.classList.toggle('open')">
+            <span class="inv-q-num">FILE.01</span>
+            <span class="inv-q-text">麥塊 Python 跟一般的 Python 課差在哪？</span>
+            <span class="inv-q-toggle">+</span>
+          </div>
+          <div class="inv-a"><div class="inv-a-inner">
+            <strong>差在「動機來源」</strong>。傳統 Python 課的孩子看不到立即效果，容易放棄。麥塊 Python 寫一行程式 Agent 就動 — 對 5-9 年級孩子來說，這個即時回饋是「繼續學下去的關鍵」。內容上 80% 是麥塊衍生的遊戲 Python 語法（在麥塊世界裡運行），20% 是通用 Python 基礎。
+          </div></div>
+        </li>
+
+        <li class="inv-item" data-cat="content">
+          <div class="inv-q" onclick="this.parentElement.classList.toggle('open')">
+            <span class="inv-q-num">FILE.02</span>
+            <span class="inv-q-text">我孩子沒上過橘蘋的麥塊基礎班可以來嗎？</span>
+            <span class="inv-q-toggle">+</span>
+          </div>
+          <div class="inv-a"><div class="inv-a-inner">
+            <strong>可以</strong>，只要 5 年級以上、有玩過麥塊。我們會在體驗課時讓老師現場評估「打字速度」和「麥塊操作熟悉度」，確認能跟上節奏即可加入。沒上過基礎班不會被擋。
+          </div></div>
+        </li>
+
+        <li class="inv-item" data-cat="signup">
+          <div class="inv-q" onclick="this.parentElement.classList.toggle('open')">
+            <span class="inv-q-num">FILE.03</span>
+            <span class="inv-q-text">為什麼是 5-9 年級這麼大的範圍？</span>
+            <span class="inv-q-toggle">+</span>
+          </div>
+          <div class="inv-a"><div class="inv-a-inner">
+            <strong>因為麥塊 Python 的設計是「降低門檻」的延續課，不是分齡的能力班</strong>。5 年級剛上完麥塊基礎想繼續、9 年級拒絕傳統 Python 想換切入點 — 都適合。
+          </div></div>
+        </li>
+
+        <li class="inv-item" data-cat="signup">
+          <div class="inv-q" onclick="this.parentElement.classList.toggle('open')">
+            <span class="inv-q-num">FILE.04</span>
+            <span class="inv-q-text">線上課我孩子能跟上嗎？</span>
+            <span class="inv-q-toggle">+</span>
+          </div>
+          <div class="inv-a"><div class="inv-a-inner">
+            <strong>橘蘋線上麥塊體系已運作 100+ 班、累積近 3,000 位學生</strong>，線上課程設計成熟。每堂課採<strong>雙師制</strong>：<strong>影片中由資深講師專業講解課程內容</strong>，同時<strong>線上有一位真人老師 1 對 1 即時回答孩子的問題</strong>。發現孩子卡住會立刻接住，<strong>不會因為線上就被忽略</strong>。
+          </div></div>
+        </li>
+
+        <li class="inv-item" data-cat="signup">
+          <div class="inv-q" onclick="this.parentElement.classList.toggle('open')">
+            <span class="inv-q-num">FILE.05</span>
+            <span class="inv-q-text">缺課怎麼辦？調課有限制嗎？</span>
+            <span class="inv-q-toggle">+</span>
+          </div>
+          <div class="inv-a"><div class="inv-a-inner">
+            <strong>線上課程沒有「補課」這個概念，而是彈性調課</strong>。家長直接到<strong>橘蘋官網的家長平台自助操作</strong>，每一堂課都能調整時段（最晚前一天 24:00 前完成，可調入未來 3-60 天內任何時段），<strong>沒有次數上限</strong>，<strong>不必通知專員</strong>。唯一的條件：<strong>需在該期上課期限內完成所有課程</strong>（例：購買 1 期 15 堂，須在 15 週內上完）。
+          </div></div>
+        </li>
+
+        <li class="inv-item" data-cat="signup">
+          <div class="inv-q" onclick="this.parentElement.classList.toggle('open')">
+            <span class="inv-q-num">FILE.06</span>
+            <span class="inv-q-text">一定要連上 3 期 45 堂嗎？</span>
+            <span class="inv-q-toggle">+</span>
+          </div>
+          <div class="inv-a"><div class="inv-a-inner">
+            <strong>不一定</strong>。每期 15 堂為一個獨立階段，可以單期報名、上完再決定要不要續報。完整的 3 期下來，孩子能走完一條完整的學習弧線 — <strong>從 Python 基礎 → 自動化創作 → 完整個人作品</strong>。每一期都有屬於那個階段獨特的成就感與作品，<strong>3 期合起來，孩子帶走的是一份完整的麥塊程式創作經驗</strong>。
+          </div></div>
+        </li>
+
+        <li class="inv-item" data-cat="outcome">
+          <div class="inv-q" onclick="this.parentElement.classList.toggle('open')">
+            <span class="inv-q-num">FILE.07</span>
+            <span class="inv-q-text">上完真的能寫 Python 嗎？還是只能在麥塊裡？</span>
+            <span class="inv-q-toggle">+</span>
+          </div>
+          <div class="inv-a"><div class="inv-a-inner">
+            <strong>80% 麥塊衍生的遊戲 Python 語法 + 20% 通用 Python 基礎</strong>。完課後孩子有「真實寫過 Python」的經驗、認識變數迴圈條件等核心概念。但如果要往更深的 Python 程式（資料結構、演算法）走，需要再上 Python 程式開發班補齊。<strong>不能跳過 Python 程式開發班</strong>。
+          </div></div>
+        </li>
+
+        <li class="inv-item" data-cat="outcome">
+          <div class="inv-q" onclick="this.parentElement.classList.toggle('open')">
+            <span class="inv-q-num">FILE.08</span>
+            <span class="inv-q-text">完課後一定要接 Python 程式開發班嗎？</span>
+            <span class="inv-q-toggle">+</span>
+          </div>
+          <div class="inv-a"><div class="inv-a-inner">
+            <strong>完全不用</strong>。麥塊 Python 的設計初衷是<strong>「讓孩子在熟悉的麥塊世界裡，延續對寫程式的興趣與探索」</strong>。完課的孩子有真實程式經驗、有作品集、有信心 — 想繼續就有選擇，不想繼續也不是失敗。如果想往程式深處走，可以接 Python 程式開發班（需通過評估測驗）；如果對其他科技領域有興趣，橘蘋還有 <strong>AI 思維</strong>、<strong>ITS 國際認證</strong> 等課程可以延續學習。<strong>每條路都通往未來</strong>。
+          </div></div>
+        </li>
+
+        <li class="inv-item" data-cat="outcome">
+          <div class="inv-q" onclick="this.parentElement.classList.toggle('open')">
+            <span class="inv-q-num">FILE.09</span>
+            <span class="inv-q-text">老師是誰？會固定嗎？</span>
+            <span class="inv-q-toggle">+</span>
+          </div>
+          <div class="inv-a"><div class="inv-a-inner">
+            <strong>橘蘋有 100+ 班的雙師制師資</strong>，所有老師都通過橘蘋教學部嚴格的篩選與培訓。固定班級會有固定的影片講師與線上真人老師搭配。我們<strong>不主打「明星老師」</strong>，主打的是「整套橘蘋教學品質保證」 — 不管孩子被分到哪位老師，都是同一套標準。<strong>每一位老師都有豐富的兒少程式教學經驗、最懂得用孩子聽得懂的方式引導，有耐心陪孩子走過每一個卡關時刻</strong>。
+          </div></div>
+        </li>
+
+        <li class="inv-item" data-cat="signup">
+          <div class="inv-q" onclick="this.parentElement.classList.toggle('open')">
+            <span class="inv-q-num">FILE.10</span>
+            <span class="inv-q-text">家長需要懂程式或麥塊嗎？要陪上嗎？</span>
+            <span class="inv-q-toggle">+</span>
+          </div>
+          <div class="inv-a"><div class="inv-a-inner">
+            <strong>完全不用</strong>。孩子上課時家長可以做自己的事，雙師制（影片講師 + 線上真人老師）會照顧孩子的上課狀態。<strong>每週會有學習週報</strong>，家長隨時可以查看孩子的學習進度與狀況；每期結束還會有完整的作品展示與進度回饋，家長一看就知道孩子做了什麼、學了什麼。
+          </div></div>
+        </li>
+
+        <li class="inv-item" data-cat="signup">
+          <div class="inv-q" onclick="this.parentElement.classList.toggle('open')">
+            <span class="inv-q-num">FILE.11</span>
+            <span class="inv-q-text">需要什麼設備？電腦規格要很高嗎？</span>
+            <span class="inv-q-toggle">+</span>
+          </div>
+          <div class="inv-a"><div class="inv-a-inner">
+            <strong>一台能跑 Minecraft 教育版的電腦 + 網路</strong>就夠了。手機 / 平板無法替代（程式碼編輯需要鍵盤）。具體規格諮詢時會給家長完整清單。報名前我們會協助確認設備能不能跑。
+          </div></div>
+        </li>
+
+        <li class="inv-item" data-cat="content">
+          <div class="inv-q" onclick="this.parentElement.classList.toggle('open')">
+            <span class="inv-q-num">FILE.12</span>
+            <span class="inv-q-text">價格 / 招生時程怎麼了解？</span>
+            <span class="inv-q-toggle">+</span>
+          </div>
+          <div class="inv-a"><div class="inv-a-inner">
+            <strong>留下諮詢資料，專員會主動聯繫</strong>。會依您孩子的年級、麥塊背景，給出最適合的開班時段與費用方案。建議先預約一堂<strong>免費體驗課</strong>，讓孩子實際感受麥塊 Python 的學習氛圍。
+          </div></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- ══════════════════════════════════════
+       ENDING · CTA 留單
+  ══════════════════════════════════════ -->
+  <section class="ending" id="cta">
+    <div class="container-narrow">
+      <div class="ending-eyebrow">▸ START YOUR QUEST</div>
+      <h2 class="ending-headline">
+        讓孩子繼續往前，<br>
+        <span class="pop">不再被嚇跑</span>。
+      </h2>
+      <p class="ending-sub">
+        留下諮詢資料，橘蘋專員會主動聯繫，安排免費體驗課。<br>
+        試上一堂，再決定要不要報名。
+      </p>
+
+      <button type="button" class="btn-block" data-oa-cta="ending">
+        <span class="pixel-tag">START</span>
+        預約免費體驗
+        <span class="arrow">▸</span>
+      </button>
+
+      <div class="ending-warn">
+        <span class="ico">!</span>
+        <span>5 年級以上適合 · 線上課程 · 影片+真人雙師 · 彈性調課（期內完成）</span>
+      </div>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+  <script>
+    AOS.init({ once: true, offset: 60, duration: 600 });
+
+    /* gameplay 卡片影片：捲到視窗才載入播放、離開就暫停（首屏不載這四支，省流量）*/
+    (function(){
+      var vids = document.querySelectorAll('.gp-video');
+      if(!vids.length) return;
+      if(!('IntersectionObserver' in window)){
+        vids.forEach(function(v){ v.play().catch(function(){}); });
+        return;
+      }
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){ e.target.play().catch(function(){}); }
+          else { e.target.pause(); }
+        });
+      }, { threshold: 0.25 });
+      vids.forEach(function(v){ io.observe(v); });
+    })();
+  </script>
+</body>
+</html>
