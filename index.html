@@ -735,7 +735,8 @@
       letter-spacing: 1.5px;
       border-bottom: 3px solid var(--text-dark);
     }
-    .gameplay-card-img img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .gameplay-card-img img,
+    .gameplay-card-img video { width: 100%; height: 100%; object-fit: cover; display: block; }
     .gameplay-card-body { padding: 24px 22px; }
     .gameplay-card-tag {
       display: inline-block;
@@ -1549,7 +1550,9 @@
       <div class="gameplay-deck">
         <div class="gameplay-card">
           <div class="gameplay-card-img">
-            <img src="assets/gameplay-chicken.jpg" alt="天上掉雞：一行迴圈連續召喚 100 隻雞從空中灑落">
+            <video class="gp-video" poster="assets/gp-chicken-poster.jpg" muted loop playsinline preload="none" aria-label="天上掉雞：一行迴圈連續召喚 100 隻雞從空中灑落">
+              <source src="assets/gp-chicken.mp4" type="video/mp4">
+            </video>
           </div>
           <div class="gameplay-card-body">
             <span class="gameplay-card-tag">▸ SPAWN · 天上掉雞</span>
@@ -1565,7 +1568,9 @@ for i in range(100):<br>
 
         <div class="gameplay-card">
           <div class="gameplay-card-img">
-            <img src="assets/gameplay-mine.jpg" alt="Agent 自動挖礦：迴圈讓 Agent 邊挖邊前進，挖出可通行隧道">
+            <video class="gp-video" poster="assets/gp-mine-poster.jpg" muted loop playsinline preload="none" aria-label="Agent 自動挖礦：迴圈讓 Agent 邊挖邊前進，挖出可通行隧道">
+              <source src="assets/gp-mine.mp4" type="video/mp4">
+            </video>
           </div>
           <div class="gameplay-card-body">
             <span class="gameplay-card-tag">▸ AGENT · 自動挖礦</span>
@@ -1583,7 +1588,9 @@ for i in range(10):<br>
 
         <div class="gameplay-card">
           <div class="gameplay-card-img">
-            <img src="assets/gameplay-castle.jpg" alt="蓋城堡：改一個變數 size，城堡就從小屋變成巨堡">
+            <video class="gp-video" poster="assets/gp-castle-poster.jpg" muted loop playsinline preload="none" aria-label="蓋城堡：改一個變數 size，城堡就從小屋變成巨堡">
+              <source src="assets/gp-castle.mp4" type="video/mp4">
+            </video>
           </div>
           <div class="gameplay-card-body">
             <span class="gameplay-card-tag">▸ BUILD · 蓋一座城堡</span>
@@ -1600,7 +1607,9 @@ def build_castle():<br>
 
         <div class="gameplay-card">
           <div class="gameplay-card-img">
-            <img src="assets/gameplay-farm.jpg" alt="自動種田：Agent 一路耕地並撒下種子，種出整排農田">
+            <video class="gp-video" poster="assets/gp-farm-poster.jpg" muted loop playsinline preload="none" aria-label="自動種田：Agent 一路耕地並撒下種子，種出整排農田">
+              <source src="assets/gp-farm.mp4" type="video/mp4">
+            </video>
           </div>
           <div class="gameplay-card-body">
             <span class="gameplay-card-tag">▸ FARM · 自動耕種</span>
@@ -2100,6 +2109,23 @@ for i in range(8):<br>
   <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
   <script>
     AOS.init({ once: true, offset: 60, duration: 600 });
+
+    /* gameplay 卡片影片：捲到視窗才載入播放、離開就暫停（首屏不載這四支，省流量）*/
+    (function(){
+      var vids = document.querySelectorAll('.gp-video');
+      if(!vids.length) return;
+      if(!('IntersectionObserver' in window)){
+        vids.forEach(function(v){ v.play().catch(function(){}); });
+        return;
+      }
+      var io = new IntersectionObserver(function(entries){
+        entries.forEach(function(e){
+          if(e.isIntersecting){ e.target.play().catch(function(){}); }
+          else { e.target.pause(); }
+        });
+      }, { threshold: 0.25 });
+      vids.forEach(function(v){ io.observe(v); });
+    })();
   </script>
 </body>
 </html>
