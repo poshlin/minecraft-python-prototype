@@ -287,6 +287,17 @@
       background-color: #B5E2F5;  /* 圖載入前的淡藍備用色 */
       padding: 96px 0 56px;
     }
+    /* hero 背景影片層：poster 頂著（影片到位前顯示原 hero 圖）、桌機鋪滿、手機隱藏 */
+    .hero-bg-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: right center;
+      z-index: 0;
+    }
+    @media (max-width: 991px) { .hero-bg-video { display: none; } }
     /* 左側淡色漸層 — 確保文字面板可讀 */
     .hero::before {
       content: '';
@@ -1361,6 +1372,11 @@
        PROLOGUE / HERO
   ══════════════════════════════════════ -->
   <section class="hero" id="prologue">
+    <video class="hero-bg-video" poster="assets/hero-fullbleed.png" autoplay muted loop playsinline preload="none" aria-hidden="true">
+      <!-- 影片到位後取消註解即上線（webm 優先、mp4 後備）：
+      <source src="assets/hero-loop.webm" type="video/webm">
+      <source src="assets/hero-loop.mp4" type="video/mp4"> -->
+    </video>
     <div class="container-wide">
       <div class="hero-main">
         <div class="hero-panel">
