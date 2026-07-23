@@ -42,6 +42,8 @@
       --text-dark:    #2D2A24;
       --text-mute:    rgba(45, 42, 36, 0.65);
       --text-dim:     rgba(45, 42, 36, 0.45);
+      --grass-text:   #2C7A24;   /* 文字專用深綠：過 AA 4.5（grass-deep 當小字僅 4.33）*/
+      --tnt-text:     #C0392B;   /* 文字專用深紅：過 AA 4.5（tnt-red 當小字僅 3.69）*/
 
       --line-soft:    rgba(0, 0, 0, 0.08);
       --line-dim:     rgba(0, 0, 0, 0.14);
@@ -203,7 +205,7 @@
     .chapter-num {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.86rem;
-      color: var(--grass-deep);
+      color: var(--text-dark);
       letter-spacing: 2.5px;
       font-weight: 700;
       padding: 4px 10px;
@@ -247,7 +249,7 @@
       .epic-headline { font-size: 1.7rem; letter-spacing: -0.5px; }
     }
     .epic-headline .accent {
-      color: var(--orange);
+      color: var(--text-dark);
       position: relative;
       display: inline-block;
     }
@@ -258,9 +260,9 @@
       height: 8px;
       background: var(--sun-yellow);
       z-index: -1;
-      opacity: 0.5;
+      opacity: 0.7;
     }
-    .epic-headline .grass { color: var(--grass-green); }
+    .epic-headline .grass { color: var(--grass-deep); }
 
     .epic-lede {
       font-size: clamp(1.05rem, 1.6vw, 1.32rem);
@@ -400,7 +402,7 @@
       padding: 10px 22px;
       background: var(--bg-white);
       border: 2px solid var(--grass-green);
-      color: var(--grass-deep);
+      color: var(--grass-text);
       font-family: 'Pixelify Sans', monospace;
       font-size: 1rem;          /* 0.66 → 1rem，Pixelify Sans 字寬窄要加大 */
       font-weight: 700;
@@ -614,7 +616,7 @@
       margin: 0;
       line-height: 1.65;
     }
-    .biome-card p strong { color: var(--tnt-red); font-weight: 800; }
+    .biome-card p strong { color: var(--tnt-text); font-weight: 800; }
 
     /* ══════════════════════════════════════ 02 PORTAL · 為什麼是出路 ══════════════════════════════════════ */
     .portal-wrap {
@@ -729,7 +731,7 @@
       font-family: 'Pixelify Sans', monospace;
       font-size: 0.6rem;
       letter-spacing: 1.5px;
-      color: var(--grass-deep);
+      color: var(--text-dark);
       background: var(--grass-glow);
       padding: 5px 10px;
       margin-bottom: 12px;
@@ -826,7 +828,7 @@
       color: var(--text-dark);
       line-height: 1.6;
     }
-    .flex-callout strong { color: var(--grass-deep); }
+    .flex-callout strong { color: var(--grass-text); }
 
     /* ══════════════════════════════════════ 05 ACADEMY · 橘蘋師資 ══════════════════════════════════════ */
     .academy-wrap {
@@ -1234,7 +1236,7 @@
       font-family: 'Pixelify Sans', monospace;
       font-size: 0.66rem;
       letter-spacing: 2.5px;
-      color: var(--grass-deep);
+      color: var(--grass-text);
       background: var(--bg-white);
       border: 2px solid var(--grass-green);
       padding: 8px 16px;
